@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLimitSwitch;
@@ -61,6 +62,10 @@ public class IntakeSubsystem extends SubsystemBase {
     m_pivotController.setSetpoint(
         MathUtil.clamp(dutyCycle, -IntakeConstants.kMaxPivotDutyCycle, IntakeConstants.kMaxPivotDutyCycle),
         ControlType.kDutyCycle);
+  }
+
+  public void setAngle(double angleDegrees, ClosedLoopSlot slot) {
+    m_pivotController.setSetpoint(angleDegrees, ControlType.kMAXMotionPositionControl, slot);
   }
 
   public boolean retractedLimitSwitchHit() {

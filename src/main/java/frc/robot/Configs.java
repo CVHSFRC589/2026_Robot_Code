@@ -1,10 +1,11 @@
 package frc.robot;
 
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -80,7 +81,25 @@ public final class Configs {
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
 					.pid(0.04, 0, 0)
-					.outputRange(-1, 1);
+					.outputRange(-1, 1).maxMotion
+					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel0, ClosedLoopSlot.kSlot0)
+					.maxAcceleration(Constants.IntakeConstants.kMaxAccel0, ClosedLoopSlot.kSlot0)
+					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError0, ClosedLoopSlot.kSlot0)
+					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel1, ClosedLoopSlot.kSlot1)
+					.maxAcceleration(Constants.IntakeConstants.kMaxAccel1, ClosedLoopSlot.kSlot1)
+					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError1, ClosedLoopSlot.kSlot1);
+			pivotMotorConfig.closedLoop.feedForward
+					.kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot0) // make sure to change s value
+					.kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot0) // slot 0 explicitly
+					.kA(Constants.IntakeConstants.kPivotA, ClosedLoopSlot.kSlot0)
+					.kCos(Constants.IntakeConstants.kPivotCos, ClosedLoopSlot.kSlot0)
+					.kCosRatio(Constants.IntakeConstants.kPivotCosRatio, ClosedLoopSlot.kSlot0)
+					.kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot1) // make sure to change s value
+					.kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot1) // slot 0 explicitly
+					.kA(Constants.IntakeConstants.kPivotA, ClosedLoopSlot.kSlot1)
+					.kCos(Constants.IntakeConstants.kPivotCos, ClosedLoopSlot.kSlot1)
+					.kCosRatio(Constants.IntakeConstants.kPivotCosRatio, ClosedLoopSlot.kSlot1);
+
 			// .feedForward.kV(drivingVelocityFeedForward);
 
 			intakeMotorConfig

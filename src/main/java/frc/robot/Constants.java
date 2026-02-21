@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -97,6 +96,19 @@ public final class Constants {
 
 		public static final double kMaxPivotDutyCycle = 0.25;
 
+		public static final double kCruiseVel0 = 500;
+		public static final double kMaxAccel0 = 250;
+		public static final double kAllowedProfileError0 = kCruiseVel0 * .1;
+
+		public static final double kCruiseVel1 = 1000;
+		public static final double kMaxAccel1 = 500;
+		public static final double kAllowedProfileError1 = kCruiseVel1 * .1;
+
+		public static final double kPivotS = 0;
+		public static final double kPivotV = 5.27;
+		public static final double kPivotA = 0.06;
+		public static final double kPivotCos = 0.15;
+		public static final double kPivotCosRatio = 50; // Either 50 or 1/50
 	}
 
 	public static final class ClimberConstants {

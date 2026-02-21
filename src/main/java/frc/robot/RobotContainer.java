@@ -19,6 +19,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.commands.PointToPose;
 import frc.robot.commands.Intake.Home;
+import frc.robot.commands.Intake.SetPivotDegree;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PhotonVisionSubsystem;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.revrobotics.spark.ClosedLoopSlot;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -119,6 +121,7 @@ public class RobotContainer {
 
 		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).onTrue(
 				new Home(m_intakeSubsystem));
+		new JoystickButton(m_driverController, XboxController.Button.kX.value).onTrue(new SetPivotDegree(m_intakeSubsystem, 300, ClosedLoopSlot.kSlot0));
 	}
 
 	/**
