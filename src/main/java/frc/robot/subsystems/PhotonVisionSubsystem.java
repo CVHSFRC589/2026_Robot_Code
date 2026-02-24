@@ -26,7 +26,7 @@ import frc.robot.Constants.FieldConstants;
 public class PhotonVisionSubsystem extends SubsystemBase {
   /** Creates a new PhotonVisionSubsystem. */
 
-  private final PhotonCamera m_topFrontCamera = new PhotonCamera("SoftwareBot_Camera_Top_Front");
+  private final PhotonCamera m_topFrontCamera = new PhotonCamera("Front_Camera");
 
   private final PhotonPoseEstimator m_photonPoseEstimator;
   private EstimateConsumer m_estimateConsumer;

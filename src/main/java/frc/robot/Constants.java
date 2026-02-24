@@ -94,6 +94,8 @@ public final class Constants {
 		public static final double kIntakeMotorPositionConversionFactor = 1.0;
 		public static final double kIntakeMotorVelocityConversionFactor = 1.0;
 
+		public static final double kMaxPivotAngle = 300;
+
 		public static final double kMaxPivotDutyCycle = 0.25;
 
 		public static final double kCruiseVel0 = 500;
@@ -107,8 +109,8 @@ public final class Constants {
 		public static final double kPivotS = 0;
 		public static final double kPivotV = 5.27;
 		public static final double kPivotA = 0.06;
-		public static final double kPivotCos = 0.15;
-		public static final double kPivotCosRatio = 50; // Either 50 or 1/50
+		public static final double kPivotCos = 3; // old = 0.15
+		public static final double kPivotCosRatio = 1.0; // Either 50 or 1/50
 	}
 
 	public static final class ClimberConstants {
@@ -171,8 +173,17 @@ public final class Constants {
 		// FIELD POSITION CONSTANTS
 		public static final Pose2d kRedHubPose = new Pose2d(Units.inchesToMeters(469.44), Units.inchesToMeters(158.84),
 				new Rotation2d(0));
+		public static final Pose2d kBlueHubPose = new Pose2d(Units.inchesToMeters(181.56), Units.inchesToMeters(158.84),
+				new Rotation2d(0));
 		public static final Pose2d kRedTrenchLeftPose = new Pose2d(Units.inchesToMeters(470.59),
 				Units.inchesToMeters(25.37), new Rotation2d(0));
+
+		// implement change per color side
+		// add true points for passing
+		public static final Pose2d kPassingPointBlueLeftPose = new Pose2d();
+		public static final Pose2d kPassingPointBlueRightPose = new Pose2d();
+		public static final Pose2d kPassingPointRedLeftPose = new Pose2d();
+		public static final Pose2d kPassingPointRedRightPose = new Pose2d();
 
 		public static final AprilTagFieldLayout kTagLayoutComp = AprilTagFieldLayout
 				.loadField(AprilTagFields.kDefaultField);
@@ -180,9 +191,6 @@ public final class Constants {
 		public static AprilTagFieldLayout LoadLayout(boolean isHome) {
 			if (isHome) {
 				try {
-					// System.out.println(Filesystem.getDeployDirectory().getPath());
-					// System.out.println(new File(Filesystem.getDeployDirectory(),
-					// "fields/april_tag_layouts/home.json").getPath());
 					return new AprilTagFieldLayout(
 							new File(Filesystem.getDeployDirectory(), "fields/april_tag_layouts/home.json").getPath());
 				} catch (IOException e) {
@@ -192,9 +200,6 @@ public final class Constants {
 				}
 			} else {
 				try {
-					// System.out.println(Filesystem.getDeployDirectory().getPath());
-					// System.out.println(new File(Filesystem.getDeployDirectory(),
-					// "fields/april_tag_layouts/home.json").getPath());
 					return new AprilTagFieldLayout(
 							new File(Filesystem.getDeployDirectory(), "fields/april_tag_layouts/2026welded.json")
 									.getPath());

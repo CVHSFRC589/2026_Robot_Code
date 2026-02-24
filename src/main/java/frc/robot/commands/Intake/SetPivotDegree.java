@@ -16,8 +16,8 @@ public class SetPivotDegree extends Command {
   private IntakeSubsystem m_intakeSubsystem;
   private double m_angle;
   private ClosedLoopSlot m_slot;
+
   public SetPivotDegree(IntakeSubsystem intakeSubsystem, double angle, ClosedLoopSlot slot) {
-    // Use addRequirements() here to declare subsystem dependencies.
     m_intakeSubsystem = intakeSubsystem;
     m_angle = angle;
     m_slot = slot;
@@ -32,11 +32,13 @@ public class SetPivotDegree extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

@@ -15,7 +15,6 @@ public class Home extends Command {
   public Home(IntakeSubsystem intakeSubsystem) {
     m_intakeSubsystem = intakeSubsystem;
     addRequirements(intakeSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +33,6 @@ public class Home extends Command {
   public void end(boolean interrupted) {
     if (!interrupted) {
       m_intakeSubsystem.resetPivotEncoder();
-
     }
   }
 

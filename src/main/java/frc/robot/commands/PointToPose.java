@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -24,15 +25,17 @@ public class PointToPose extends Command {
   DoubleSupplier m_xSpeed;
   // Pose2d m_targetPose = new Pose2d(Units.inchesToMeters(468.56),
   // Units.inchesToMeters(158.32), new Rotation2d(0));
-  Pose2d m_targetPose = FieldConstants.kRedTrenchLeftPose;
+  Pose2d m_targetPose;
   double m_theta;
 
   /** Creates a new PointToPose. */
-  public PointToPose(DriveSubsystem driveSubsystem, DoubleSupplier ySpeed, DoubleSupplier xSpeed) {
+  public PointToPose(DriveSubsystem driveSubsystem, Supplier<Pose2d> targetPose, DoubleSupplier ySpeed,
+      DoubleSupplier xSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveSubsystem = driveSubsystem;
     m_xSpeed = xSpeed;
     m_ySpeed = ySpeed;
+    m_targetPose = targetPose.get();
     m_turningController = new PIDController(DriveConstants.kRotationalPIDkP, DriveConstants.kRotationalPIDkI,
         DriveConstants.kRotationalPIDkD);
 

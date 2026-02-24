@@ -13,8 +13,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.commands.PointToPose;
@@ -28,6 +31,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.spark.ClosedLoopSlot;
 
@@ -51,6 +58,8 @@ public class RobotContainer {
 
 	AprilTagFieldLayout m_fieldLayout;
 
+	Alliance m_alliance;
+
 	private final SendableChooser<Command> autoChooser;
 
 	/**
@@ -64,6 +73,7 @@ public class RobotContainer {
 		configureButtonBindings();
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+		m_alliance = DriverStation.getAlliance().get();
 
 		// Configure default commands
 		m_robotDrive.setDefaultCommand(
@@ -108,20 +118,39 @@ public class RobotContainer {
 		new JoystickButton(m_driverController, XboxController.Button.kB.value)
 				.whileTrue(new PointToPose(
 						m_robotDrive,
-						() -> Math.pow(
-								MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband), 3),
-						() -> Math.pow(
-								MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband), 3)
-				// () -> 0,
-				// () -> 0
-				));
+						() -> getAlliance() ? FieldConstants.kRedHubPose : FieldConstants.kBlueHubPose,
+						() -> getDriverControllerProcessedLeftStickY(),
+						() -> getDriverControllerProcessedLeftStickX()));
 
 		new JoystickButton(m_driverController, XboxController.Button.kA.value).onTrue(
 				new PathfindToPose(FieldConstants.kRedTrenchLeftPose));
 
 		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).onTrue(
 				new Home(m_intakeSubsystem));
-		new JoystickButton(m_driverController, XboxController.Button.kX.value).onTrue(new SetPivotDegree(m_intakeSubsystem, 300, ClosedLoopSlot.kSlot0));
+		new JoystickButton(m_driverController, XboxController.Button.kX.value)
+				.onTrue(new SetPivotDegree(m_intakeSubsystem, IntakeConstants.kMaxPivotAngle, ClosedLoopSlot.kSlot0));
+
+		// auto aim commands (change these to operator board)
+		// pass to left setpoint
+		new POVButton(m_driverController, 270).whileTrue(
+				new PointToPose(
+						m_robotDrive,
+						() -> getAlliance() ? FieldConstants.kPassingPointRedLeftPose : FieldConstants.kPassingPointBlueLeftPose,
+						() -> getDriverControllerProcessedLeftStickY(),
+						() -> getDriverControllerProcessedLeftStickX()));
+		// new JoystickButton(m_driverController, XboxController.Axis.)
+	}
+
+	private double getDriverControllerProcessedLeftStickX() {
+		return Math.pow(MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband), 3);
+	}
+
+	private double getDriverControllerProcessedLeftStickY() {
+		return Math.pow(MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband), 3);
+	}
+
+	public boolean getAlliance() {
+		return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
 	}
 
 	/**

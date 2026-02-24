@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,8 +23,8 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
-  public SparkFlex m_pivotMotor;
-  public SparkFlex m_intakeMotor;
+  public SparkMax m_pivotMotor; // change back to SparkFlex
+  public SparkMax m_intakeMotor; // change back to SparkFlex
 
   public SparkClosedLoopController m_pivotController;
   public SparkClosedLoopController m_intakeController;
@@ -32,13 +33,17 @@ public class IntakeSubsystem extends SubsystemBase {
   public SparkLimitSwitch m_pivotMotorReverseSwitch;
 
   public IntakeSubsystem() {
-    m_pivotMotor = new SparkFlex(IntakeConstants.kPivotMotorCanID, MotorType.kBrushless);
-    m_intakeMotor = new SparkFlex(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushless);
+    m_pivotMotor = new SparkMax(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushless);
+    m_pivotController = m_pivotMotor.getClosedLoopController();
+    // m_intakeMotor = new SparkMax(IntakeConstants.kIntakeMotorCanID,
+    // MotorType.kBrushless);
 
-    m_pivotMotor.configure(IntakeSubsystemConfigs.pivotMotorConfig, ResetMode.kResetSafeParameters,
+    m_pivotMotor.configure(IntakeSubsystemConfigs.pivotMotorConfig,
+        ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-    m_intakeMotor.configure(IntakeSubsystemConfigs.intakeMotorConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    // m_intakeMotor.configure(IntakeSubsystemConfigs.intakeMotorConfig,
+    // ResetMode.kResetSafeParameters,
+    // PersistMode.kPersistParameters);
 
     m_pivotMotorForwardSwitch = m_pivotMotor.getForwardLimitSwitch();
     m_pivotMotorReverseSwitch = m_pivotMotor.getReverseLimitSwitch();

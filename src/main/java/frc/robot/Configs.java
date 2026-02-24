@@ -65,8 +65,8 @@ public final class Configs {
 	}
 
 	public static final class IntakeSubsystemConfigs {
-		public static final SparkFlexConfig pivotMotorConfig = new SparkFlexConfig();
-		public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
+		public static final SparkMaxConfig pivotMotorConfig = new SparkMaxConfig();
+		public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
 
 		static {
 			pivotMotorConfig
@@ -88,17 +88,21 @@ public final class Configs {
 					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel1, ClosedLoopSlot.kSlot1)
 					.maxAcceleration(Constants.IntakeConstants.kMaxAccel1, ClosedLoopSlot.kSlot1)
 					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError1, ClosedLoopSlot.kSlot1);
-			pivotMotorConfig.closedLoop.feedForward
-					.kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot0) // make sure to change s value
-					.kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot0) // slot 0 explicitly
-					.kA(Constants.IntakeConstants.kPivotA, ClosedLoopSlot.kSlot0)
-					.kCos(Constants.IntakeConstants.kPivotCos, ClosedLoopSlot.kSlot0)
-					.kCosRatio(Constants.IntakeConstants.kPivotCosRatio, ClosedLoopSlot.kSlot0)
-					.kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot1) // make sure to change s value
-					.kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot1) // slot 0 explicitly
-					.kA(Constants.IntakeConstants.kPivotA, ClosedLoopSlot.kSlot1)
-					.kCos(Constants.IntakeConstants.kPivotCos, ClosedLoopSlot.kSlot1)
-					.kCosRatio(Constants.IntakeConstants.kPivotCosRatio, ClosedLoopSlot.kSlot1);
+			// pivotMotorConfig.closedLoop.feedForward
+			// .kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot0) // make sure to
+			// change s value
+			// .kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot0) // slot 0
+			// explicitly
+			// .kA(Constants.IntakeConstants.kPivotA, ClosedLoopSlot.kSlot0)
+			// //.kCos(Constants.IntakeConstants.kPivotCos, ClosedLoopSlot.kSlot0)
+			// .kCosRatio(Constants.IntakeConstants.kPivotCosRatio, ClosedLoopSlot.kSlot0)
+			// .kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot1) // make sure to
+			// change s value
+			// .kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot1) // slot 0
+			// explicitly
+			// .kA(Constants.IntakeConstants.kPivotA, ClosedLoopSlot.kSlot1)
+			// .kCos(Constants.IntakeConstants.kPivotCos, ClosedLoopSlot.kSlot1)
+			// .kCosRatio(Constants.IntakeConstants.kPivotCosRatio, ClosedLoopSlot.kSlot1);
 
 			// .feedForward.kV(drivingVelocityFeedForward);
 
