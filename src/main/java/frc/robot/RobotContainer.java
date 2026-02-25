@@ -125,7 +125,7 @@ public class RobotContainer {
 		new JoystickButton(m_driverController, XboxController.Button.kA.value).onTrue(
 				new PathfindToPose(FieldConstants.kRedTrenchLeftPose));
 
-		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).onTrue(
+		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).whileTrue(
 				new Home(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kX.value)
 				.onTrue(new SetPivotDegree(m_intakeSubsystem, IntakeConstants.kMaxPivotAngle, ClosedLoopSlot.kSlot0));

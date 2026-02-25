@@ -53,6 +53,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Intake Pivot Position", m_pivotMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Set Point Position", m_pivotController.getMAXMotionSetpointPosition());
+    SmartDashboard.putBoolean("Is it at set point", m_pivotController.isAtSetpoint());
 
     if (retractedLimitSwitchHit()) {
       m_pivotMotor.getEncoder().setPosition(0);

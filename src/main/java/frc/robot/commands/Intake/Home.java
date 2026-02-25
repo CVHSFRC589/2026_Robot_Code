@@ -20,12 +20,14 @@ public class Home extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_intakeSubsystem.set(-0.25); // is negative home direction?
   }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.set(-0.25); // is negative home direction?
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -34,6 +36,7 @@ public class Home extends Command {
     if (!interrupted) {
       m_intakeSubsystem.resetPivotEncoder();
     }
+    m_intakeSubsystem.set(0);
   }
 
   // Returns true when the command should end.
