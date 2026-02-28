@@ -4,39 +4,42 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.revrobotics.spark.ClosedLoopSlot;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 // import edu.wpi.first.apriltag.AprilTag;
 // import edu.wpi.first.apriltag.AprilTagFieldLayout;
 // import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 // import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.PathfindToPose;
-import frc.robot.commands.PointToPose;
-import frc.robot.commands.Intake.Home;
-import frc.robot.commands.Intake.SetPivotDegree;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PhotonVisionSubsystem;
-import frc.robot.subsystems.TelemetrySubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-
-import java.util.function.DoubleSupplier;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.revrobotics.spark.ClosedLoopSlot;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.PathfindToPose;
+import frc.robot.commands.PointToPose;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.Climber.ExtendClimber;
+import frc.robot.commands.Climber.HomeClimber;
+import frc.robot.commands.Intake.ExtendIntake;
+import frc.robot.commands.Intake.HomeIntake;
+import frc.robot.commands.Intake.SetPivotDegree;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TelemetrySubsystem;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -51,6 +54,8 @@ public class RobotContainer {
 			m_robotDrive::addVisionMeasurement);
 	private final TelemetrySubsystem m_telemetry = new TelemetrySubsystem();
 	private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+	private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+	private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 	// public boolean isTest = false;
 
 	// The driver's controller
@@ -126,18 +131,33 @@ public class RobotContainer {
 				new PathfindToPose(FieldConstants.kRedTrenchLeftPose));
 
 		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).whileTrue(
-				new Home(m_intakeSubsystem));
+				new HomeIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kX.value)
-				.onTrue(new SetPivotDegree(m_intakeSubsystem, IntakeConstants.kMaxPivotAngle, ClosedLoopSlot.kSlot0));
-
+				.whileTrue(new ExtendIntake(m_intakeSubsystem));
+		new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+				.whileTrue(new HomeClimber(m_climberSubsystem));
+		new JoystickButton(m_driverController, XboxController.Button.kBack.value)
+				.whileTrue(new ExtendClimber(m_climberSubsystem));
+		new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+				.whileTrue(new Shoot(1500.0, 3000.0, 1000.0, m_shooterSubsystem));
 		// auto aim commands (change these to operator board)
 		// pass to left setpoint
 		new POVButton(m_driverController, 270).whileTrue(
 				new PointToPose(
 						m_robotDrive,
-						() -> getAlliance() ? FieldConstants.kPassingPointRedLeftPose : FieldConstants.kPassingPointBlueLeftPose,
+						() -> getAlliance() ? FieldConstants.kPassingPointRedLeftPose
+								: FieldConstants.kPassingPointBlueLeftPose,
 						() -> getDriverControllerProcessedLeftStickY(),
 						() -> getDriverControllerProcessedLeftStickX()));
+		new POVButton(m_driverController, 90).whileTrue(
+				new PointToPose(
+						m_robotDrive,
+						() -> getAlliance() ? FieldConstants.kPassingPointRedRightPose
+								: FieldConstants.kPassingPointBlueRightPose,
+						() -> getDriverControllerProcessedLeftStickY(),
+						() -> getDriverControllerProcessedLeftStickX()));
+		new POVButton(m_driverController, 0).whileTrue(
+				new SetPivotDegree(m_intakeSubsystem, 160, ClosedLoopSlot.kSlot0));
 		// new JoystickButton(m_driverController, XboxController.Axis.)
 	}
 

@@ -7,6 +7,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -65,8 +66,8 @@ public final class Configs {
 	}
 
 	public static final class IntakeSubsystemConfigs {
-		public static final SparkMaxConfig pivotMotorConfig = new SparkMaxConfig();
-		public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+		public static final SparkFlexConfig pivotMotorConfig = new SparkFlexConfig();
+		public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
 		static {
 			pivotMotorConfig
@@ -79,8 +80,7 @@ public final class Configs {
 
 			pivotMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-					// These are example gains you may need to them for your own robot!
-					.pid(0.04, 0, 0)
+					.pid(0.04, 0, 0, ClosedLoopSlot.kSlot0)
 					.outputRange(-1, 1).maxMotion
 					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel0, ClosedLoopSlot.kSlot0)
 					.maxAcceleration(Constants.IntakeConstants.kMaxAccel0, ClosedLoopSlot.kSlot0)
@@ -88,7 +88,7 @@ public final class Configs {
 					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel1, ClosedLoopSlot.kSlot1)
 					.maxAcceleration(Constants.IntakeConstants.kMaxAccel1, ClosedLoopSlot.kSlot1)
 					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError1, ClosedLoopSlot.kSlot1);
-			// pivotMotorConfig.closedLoop.feedForward
+			// pivotMotorConfig.closedLoop.feedForward.
 			// .kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot0) // make sure to
 			// change s value
 			// .kV(Constants.IntakeConstants.kPivotV, ClosedLoopSlot.kSlot0) // slot 0
@@ -108,7 +108,7 @@ public final class Configs {
 
 			intakeMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(20);
+					.smartCurrentLimit(30);
 
 			intakeMotorConfig.encoder
 					.positionConversionFactor(IntakeConstants.kIntakeMotorPositionConversionFactor)
@@ -130,7 +130,8 @@ public final class Configs {
 		static {
 			leftMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(20);
+					.smartCurrentLimit(10)
+					.inverted(true);
 
 			leftMotorConfig.encoder
 					.positionConversionFactor(IntakeConstants.kPivotMotorPositionConversionFactor)
@@ -143,9 +144,15 @@ public final class Configs {
 					.outputRange(-1, 1);
 			// .feedForward.kV(drivingVelocityFeedForward);
 
+			leftMotorConfig.closedLoop.maxMotion
+					.cruiseVelocity(ClimberConstants.kMaxExtendVelocity, ClosedLoopSlot.kSlot0)
+					.cruiseVelocity(ClimberConstants.kMaxRetractVelocity, ClosedLoopSlot.kSlot1)
+					.maxAcceleration(ClimberConstants.kMaxExtendAcceleration, ClosedLoopSlot.kSlot0)
+					.maxAcceleration(ClimberConstants.kMaxRetractAcceleration, ClosedLoopSlot.kSlot1);
+
 			rightMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(20);
+					.smartCurrentLimit(10);
 
 			rightMotorConfig.encoder
 					.positionConversionFactor(IntakeConstants.kIntakeMotorPositionConversionFactor)
@@ -157,6 +164,12 @@ public final class Configs {
 					.pid(0.04, 0, 0)
 					.outputRange(-1, 1);
 			// .feedForward.kV(drivingVelocityFeedForward);
+
+			rightMotorConfig.closedLoop.maxMotion
+					.cruiseVelocity(ClimberConstants.kMaxExtendVelocity, ClosedLoopSlot.kSlot0)
+					.cruiseVelocity(ClimberConstants.kMaxRetractVelocity, ClosedLoopSlot.kSlot1)
+					.maxAcceleration(ClimberConstants.kMaxExtendAcceleration, ClosedLoopSlot.kSlot0)
+					.maxAcceleration(ClimberConstants.kMaxRetractAcceleration, ClosedLoopSlot.kSlot1);
 		}
 	}
 }

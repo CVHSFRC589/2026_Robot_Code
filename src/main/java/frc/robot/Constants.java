@@ -86,15 +86,16 @@ public final class Constants {
 	}
 
 	public static final class IntakeConstants {
-		public static final int kPivotMotorCanID = 42;
-		public static final int kIntakeMotorCanID = 43;
+		public static final int kPivotMotorCanID = 58;
+		public static final int kIntakeMotorCanID = 59;
 
-		public static final double kPivotMotorPositionConversionFactor = 1.0;
-		public static final double kPivotMotorVelocityConversionFactor = 1.0;
+		public static final double kPivotMotorPositionConversionFactor = 360.0;
+		public static final double kPivotMotorVelocityConversionFactor = 360.0;
 		public static final double kIntakeMotorPositionConversionFactor = 1.0;
 		public static final double kIntakeMotorVelocityConversionFactor = 1.0;
 
-		public static final double kMaxPivotAngle = 300;
+		public static final double kExtendPivotAngle = 50;
+		public static final double kRetractedPivotAngle = 0;
 
 		public static final double kMaxPivotDutyCycle = 0.25;
 
@@ -114,9 +115,33 @@ public final class Constants {
 	}
 
 	public static final class ClimberConstants {
-		public static final int kLeftMotorCanID = 0;
-		public static final int kRightMotorCanID = 0;
+		public static final int kLeftMotorCanID = 55;
+		public static final int kRightMotorCanID = 56;
 		public static final double kMaxSpeed = 0.1;
+
+		public static final double kMaxExtendDistance = 0.0;
+		public static final double kHomeDutyCycle = -0.2; // keep this value small (0 is no power, 1 is full power)
+
+		public static final double kMaxExtendVelocity = 0.1;
+		public static final double kMaxRetractVelocity = 0.1;
+		public static final double kMaxExtendAcceleration = 0.1;
+		public static final double kMaxRetractAcceleration = 0.1;
+
+		public static final int kPinionGearTeeth = 15;
+		public static final double kPinionGearDP = 10;
+		public static final double kPinionGearRadius = kPinionGearTeeth / (2 * kPinionGearDP);
+		public static final double kGearboxReduction = 1 / 100;
+		public static final double kMotorPositionConversionFactor = kGearboxReduction * kPinionGearRadius;
+		public static final double kMotorVelocityConversionFactor = kGearboxReduction * kPinionGearRadius;
+	}
+
+	public static final class ShooterConstants {
+		public static final int kBottomMotorCanID = 50;
+		public static final int kMiddleMotorCanID = 51;
+		public static final int kTopMotorCanID = 52;
+
+		public static final double voltageToRPMRatio = ((-542.978271484375 / -1.0) + (-2768.88671875 / -5.0)
+				+ (-1657.4326171875 / -3.0)) / 3.0;
 	}
 
 	public static final class ModuleConstants {

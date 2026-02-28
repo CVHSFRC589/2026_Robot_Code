@@ -8,6 +8,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
@@ -42,6 +43,14 @@ public class ClimberSubsystem extends SubsystemBase {
     }
   }
 
+  public void setLeftClimberPosition(double position) {
+    m_leftClimber.m_controller.setSetpoint(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+  }
+
+  public void setRightClimberPosition(double position) {
+    m_rightClimber.m_controller.setSetpoint(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+  }
+
   public class Climber {
     public SparkMax m_motor;
     public SparkClosedLoopController m_controller;
@@ -50,6 +59,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public Climber(int CanID, SparkBaseConfig motorConfig) {
       m_motor = new SparkMax(CanID, MotorType.kBrushless);
       m_motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      m_limitSwitch = m_motor.getForwardLimitSwitch();
 
       m_controller = m_motor.getClosedLoopController();
     }

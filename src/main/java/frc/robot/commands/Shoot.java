@@ -24,9 +24,9 @@ public class Shoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.moveTopMotor(m_topSpeed);
-     m_shooterSubsystem.moveMiddleMotor(m_middleSpeed);
-      m_shooterSubsystem.moveBottomMotor(m_bottomSpeed);
+    m_shooterSubsystem.setSpeedTop(m_topSpeed);
+     m_shooterSubsystem.setSpeedMiddle(m_middleSpeed);
+      m_shooterSubsystem.setSpeedBottom(m_bottomSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +37,9 @@ public class Shoot extends Command {
   @Override
   public void end(boolean interrupted) {
     //Stop motors here
+    m_shooterSubsystem.setSpeedTop(0);
+     m_shooterSubsystem.setSpeedMiddle(0);
+      m_shooterSubsystem.setSpeedBottom(0);
   }
 
   // Returns true when the command should end.
