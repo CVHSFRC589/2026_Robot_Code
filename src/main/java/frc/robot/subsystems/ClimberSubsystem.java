@@ -6,13 +6,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.config.SparkBaseConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +34,12 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Left Climber Position", m_leftClimber.getPosition());
     SmartDashboard.putNumber("Right Climber Position", m_rightClimber.getPosition());
+    SmartDashboard.putBoolean("Left Climber at Home", m_leftClimber.isLimitSwitchTouched());
+    SmartDashboard.putBoolean("Right Climber at Home", m_rightClimber.isLimitSwitchTouched());
+    SmartDashboard.putNumber("Left Climber Speed", m_leftClimber.m_motor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Right Climber Speed", m_rightClimber.m_motor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Left Climber Current", m_leftClimber.m_motor.getOutputCurrent());
+    SmartDashboard.putNumber("Right Climber Current", m_rightClimber.m_motor.getOutputCurrent());
 
     if (m_leftClimber.isLimitSwitchTouched()) {
       m_leftClimber.resetEncoder();
@@ -59,7 +65,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public Climber(int CanID, SparkBaseConfig motorConfig) {
       m_motor = new SparkMax(CanID, MotorType.kBrushless);
       m_motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      m_limitSwitch = m_motor.getForwardLimitSwitch();
+      m_limitSwitch = m_motor.getReverseLimitSwitch();
 
       m_controller = m_motor.getClosedLoopController();
     }

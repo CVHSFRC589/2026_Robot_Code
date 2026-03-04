@@ -4,8 +4,13 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
+import javax.xml.xpath.XPathVariableResolver;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 // import edu.wpi.first.apriltag.AprilTag;
@@ -22,18 +27,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.commands.PointToPose;
-import frc.robot.commands.Shoot;
 import frc.robot.commands.Climber.ExtendClimber;
+import frc.robot.commands.Climber.ExtendClimbersDutyCycle;
 import frc.robot.commands.Climber.HomeClimber;
+import frc.robot.commands.Climber.MoveLeftClimber;
+import frc.robot.commands.Climber.MoveRightClimber;
+import frc.robot.commands.Climber.RetractClimbersDutyCycle;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.HomeIntake;
+import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.Intake.SetPivotDegree;
+import frc.robot.commands.Shooter.FeedFuelAtTarget;
+import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.Shooter.SpinToDistanceTargetSpeed;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -60,6 +74,7 @@ public class RobotContainer {
 
 	// The driver's controller
 	XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+	CommandXboxController m_testController = new CommandXboxController(5);
 
 	AprilTagFieldLayout m_fieldLayout;
 
@@ -104,6 +119,7 @@ public class RobotContainer {
 	 * created by
 	 * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
 	 * subclasses ({@link
+	 * 
 	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
 	 * passing it to a
 	 * {@link JoystickButton}.
@@ -127,19 +143,45 @@ public class RobotContainer {
 						() -> getDriverControllerProcessedLeftStickY(),
 						() -> getDriverControllerProcessedLeftStickX()));
 
-		new JoystickButton(m_driverController, XboxController.Button.kA.value).onTrue(
-				new PathfindToPose(FieldConstants.kRedTrenchLeftPose));
-
+		// new JoystickButton(m_driverController,
+		// XboxController.Button.kA.value).onTrue(
+		// new PathfindToPose(FieldConstants.kRedTrenchLeftPose));
+		new JoystickButton(m_driverController, XboxController.Button.kA.value)
+				.whileTrue(new FeedFuelAtTarget(m_shooterSubsystem));
+		new JoystickButton(m_testController.getHID(), XboxController.Button.kLeftBumper.value)
+				.whileTrue(new SpinToDistanceTargetSpeed(m_shooterSubsystem));
+		// m_testController.start().whileTrue(new RunIntake(m_intakeSubsystem));
+		m_testController.start().toggleOnTrue(new RunIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).whileTrue(
 				new HomeIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kX.value)
-				.whileTrue(new ExtendIntake(m_intakeSubsystem));
+				.whileTrue(new HomeIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
 				.whileTrue(new HomeClimber(m_climberSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kBack.value)
 				.whileTrue(new ExtendClimber(m_climberSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-				.whileTrue(new Shoot(1500.0, 3000.0, 1000.0, m_shooterSubsystem));
+				.whileTrue(new Shoot(
+						() -> {
+							return SmartDashboard.getNumber("Top Motor Speed Target", 0);
+						},
+						() -> {
+							return SmartDashboard.getNumber("Middle Motor Speed Target", 0);
+						},
+						() -> {
+							return SmartDashboard.getNumber("Bottom Motor Speed Target", 0);
+						},
+						m_shooterSubsystem));
+		new JoystickButton(m_testController.getHID(), XboxController.Button.kX.value)
+				.whileTrue(new MoveLeftClimber(m_climberSubsystem, .1));
+		new JoystickButton(m_testController.getHID(), XboxController.Button.kB.value)
+				.whileTrue(new MoveLeftClimber(m_climberSubsystem, -.1));
+		new JoystickButton(m_testController.getHID(), XboxController.Button.kY.value)
+				.whileTrue(new MoveRightClimber(m_climberSubsystem, .1));
+		new JoystickButton(m_testController.getHID(), XboxController.Button.kRightBumper.value)
+				.whileTrue(new MoveRightClimber(m_climberSubsystem, -.1));
+		m_testController.povDown().whileTrue(new RetractClimbersDutyCycle(m_climberSubsystem));
+		m_testController.povUp().whileTrue(new ExtendClimbersDutyCycle(m_climberSubsystem));
 		// auto aim commands (change these to operator board)
 		// pass to left setpoint
 		new POVButton(m_driverController, 270).whileTrue(
@@ -157,8 +199,25 @@ public class RobotContainer {
 						() -> getDriverControllerProcessedLeftStickY(),
 						() -> getDriverControllerProcessedLeftStickX()));
 		new POVButton(m_driverController, 0).whileTrue(
-				new SetPivotDegree(m_intakeSubsystem, 160, ClosedLoopSlot.kSlot0));
+				new SetPivotDegree(m_intakeSubsystem, IntakeConstants.kExtendPivotAngle, ClosedLoopSlot.kSlot0));
 		// new JoystickButton(m_driverController, XboxController.Axis.)
+		m_testController.a()
+				.whileTrue(new InstantCommand(() -> {
+					double m_topSpeed = SmartDashboard.getNumber("Top Motor Speed Set", 0);
+					double m_middleSpeed = SmartDashboard.getNumber("Middle Motor Speed Set", 0);
+					double m_bottomSpeed = SmartDashboard.getNumber("Bottom Motor Speed Set", 0);
+					m_shooterSubsystem.setSpeedTop(m_topSpeed);
+					m_shooterSubsystem.setSpeedMiddle(m_middleSpeed);
+					m_shooterSubsystem.setSpeedBottom(m_bottomSpeed);
+					// System.out.println("setting top motor speed to 10");
+				}, m_shooterSubsystem))
+				.whileFalse(new InstantCommand(() -> {
+					m_shooterSubsystem.setSpeedTop(0);
+					m_shooterSubsystem.setSpeedMiddle(0);
+					m_shooterSubsystem.setSpeedBottom(0);
+					// System.out.println("setting top motor speed to 0");
+				}, m_shooterSubsystem));
+
 	}
 
 	private double getDriverControllerProcessedLeftStickX() {
@@ -171,6 +230,66 @@ public class RobotContainer {
 
 	public boolean getAlliance() {
 		return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
+	}
+
+	static public boolean isHubActive() {
+		Optional<Alliance> alliance = DriverStation.getAlliance();
+		// If we have no alliance, we cannot be enabled, therefore no hub.
+		if (alliance.isEmpty()) {
+			return false;
+		}
+		// Hub is always enabled in autonomous.
+		if (DriverStation.isAutonomousEnabled()) {
+			return true;
+		}
+		// At this point, if we're not teleop enabled, there is no hub.
+		if (!DriverStation.isTeleopEnabled()) {
+			return false;
+		}
+
+		// We're teleop enabled, compute.
+		double matchTime = DriverStation.getMatchTime();
+		String gameData = DriverStation.getGameSpecificMessage();
+		// If we have no game data, we cannot compute, assume hub is active, as its
+		// likely early in teleop.
+		if (gameData.isEmpty()) {
+			return true;
+		}
+		boolean redInactiveFirst = false;
+		switch (gameData.charAt(0)) {
+			case 'R' -> redInactiveFirst = true;
+			case 'B' -> redInactiveFirst = false;
+			default -> {
+				// If we have invalid game data, assume hub is active.
+				return true;
+			}
+		}
+
+		// Shift was is active for blue if red won auto, or red if blue won auto.
+		boolean shift1Active = switch (alliance.get()) {
+			case Red -> !redInactiveFirst;
+			case Blue -> redInactiveFirst;
+		};
+
+		if (matchTime > 130) {
+			// Transition shift, hub is active.
+			return true;
+		} else if (matchTime > 105) {
+			// Shift 1
+			return shift1Active;
+		} else if (matchTime > 80) {
+			// Shift 2
+			return !shift1Active;
+		} else if (matchTime > 55) {
+			// Shift 3
+			return shift1Active;
+		} else if (matchTime > 30) {
+			// Shift 4
+			return !shift1Active;
+		} else {
+			// End game, hub always active.
+			return true;
+		}
 	}
 
 	/**

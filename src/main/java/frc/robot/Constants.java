@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -25,6 +27,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.data.ShooterDatum;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -89,12 +92,12 @@ public final class Constants {
 		public static final int kPivotMotorCanID = 58;
 		public static final int kIntakeMotorCanID = 59;
 
-		public static final double kPivotMotorPositionConversionFactor = 360.0;
+		public static final double kPivotMotorPositionConversionFactor = 360.0 / 50.0;
 		public static final double kPivotMotorVelocityConversionFactor = 360.0;
 		public static final double kIntakeMotorPositionConversionFactor = 1.0;
 		public static final double kIntakeMotorVelocityConversionFactor = 1.0;
 
-		public static final double kExtendPivotAngle = 50;
+		public static final double kExtendPivotAngle = 364555.25;
 		public static final double kRetractedPivotAngle = 0;
 
 		public static final double kMaxPivotDutyCycle = 0.25;
@@ -103,8 +106,8 @@ public final class Constants {
 		public static final double kMaxAccel0 = 250;
 		public static final double kAllowedProfileError0 = kCruiseVel0 * .1;
 
-		public static final double kCruiseVel1 = 1000;
-		public static final double kMaxAccel1 = 500;
+		public static final double kCruiseVel1 = 10;
+		public static final double kMaxAccel1 = 50;
 		public static final double kAllowedProfileError1 = kCruiseVel1 * .1;
 
 		public static final double kPivotS = 0;
@@ -142,6 +145,16 @@ public final class Constants {
 
 		public static final double voltageToRPMRatio = ((-542.978271484375 / -1.0) + (-2768.88671875 / -5.0)
 				+ (-1657.4326171875 / -3.0)) / 3.0;
+
+		public static final Map<Double, ShooterDatum> kShooterDistanceToRPMsMap = new HashMap<>();
+
+		public static void LoadShooterToRpmMap() {
+			// put all tested values for rpms's
+			// distance in meters
+			kShooterDistanceToRPMsMap.put(2.0, new ShooterDatum(2000, 1000, 2000));
+
+			// kShooterDistanceToRPMsMap.entrySet()
+		}
 	}
 
 	public static final class ModuleConstants {

@@ -2,21 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Shoot extends Command {
-  double m_topSpeed, m_middleSpeed, m_bottomSpeed;
+public class SpinToDistanceTargetSpeed extends Command {
   ShooterSubsystem m_shooterSubsystem;
-  /** Creates a new Shoot. */
-  public Shoot(double topSpeed, double middleSpeed, double bottomSpeed, ShooterSubsystem shooterSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_topSpeed = topSpeed;
-    m_middleSpeed = middleSpeed;
-    m_bottomSpeed = bottomSpeed;
+
+  /** Creates a new SpinUp. */
+  public SpinToDistanceTargetSpeed(ShooterSubsystem shooterSubsystem) {
     m_shooterSubsystem = shooterSubsystem;
     addRequirements(m_shooterSubsystem);
   }
@@ -24,22 +20,20 @@ public class Shoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setSpeedTop(m_topSpeed);
-     m_shooterSubsystem.setSpeedMiddle(m_middleSpeed);
-      m_shooterSubsystem.setSpeedBottom(m_bottomSpeed);
+    // m_shooterSubsystem.setSpeedTop(m_shooterSubsystem);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_shooterSubsystem.setSpeedTopToTarget();
+    m_shooterSubsystem.setSpeedMiddleToTarget();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //Stop motors here
-    m_shooterSubsystem.setSpeedTop(0);
-     m_shooterSubsystem.setSpeedMiddle(0);
-      m_shooterSubsystem.setSpeedBottom(0);
   }
 
   // Returns true when the command should end.

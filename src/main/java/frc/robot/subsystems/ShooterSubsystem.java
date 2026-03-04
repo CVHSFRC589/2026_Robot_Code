@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -17,11 +19,13 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants.NeoVortexConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.data.ShooterDatum;
 
 public class ShooterSubsystem extends SubsystemBase {
 	SparkFlex m_topMotor, m_middleMotor, m_bottomMotor;
@@ -152,6 +156,10 @@ public class ShooterSubsystem extends SubsystemBase {
 		// NeoVortexConstants.kMotorkV, ControlType.kVoltage);
 	}
 
+	public void setSpeedTopToTarget() {
+		setSpeedTop(m_topSpeed);
+	}
+
 	public void setSpeedMiddle(double speed) {
 		m_middleSpeed = speed;
 		m_closedLoopControllerMiddle.setSetpoint(m_middleSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
@@ -159,11 +167,19 @@ public class ShooterSubsystem extends SubsystemBase {
 		// NeoVortexConstants.kMotorkV, ControlType.kVoltage);
 	}
 
+	public void setSpeedMiddleToTarget() {
+		setSpeedTop(m_middleSpeed);
+	}
+
 	public void setSpeedBottom(double speed) {
 		m_bottomSpeed = speed;
 		m_closedLoopControllerBottom.setSetpoint(m_bottomSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
 		// m_closedLoopControllerBottom.setSetpoint(m_bottomSpeed /
 		// NeoVortexConstants.kMotorkV, ControlType.kVoltage);
+	}
+
+	public void setSpeedBottomToTarget() {
+		setSpeedBottom(m_bottomSpeed);
 	}
 
 	// in rpm
@@ -179,6 +195,36 @@ public class ShooterSubsystem extends SubsystemBase {
 	// in rpm
 	public double getBottomMotorSpeed() {
 		return m_bottomEncoder.getVelocity();
+	}
+
+	public void SetShooterTargetDistance(double targetDistance) {
+		double lowKey = 0;
+		double highKey = 0;
+		for (Map.Entry<Double, ShooterDatum> entry : ShooterConstants.kShooterDistanceToRPMsMap.entrySet()) {
+			double key = entry.getKey();
+			if (targetDistance < key) {
+				highKey = key;
+				break;
+			} else {
+				lowKey = key;
+			}
+		}
+
+		ShooterDatum lowVal = ShooterConstants.kShooterDistanceToRPMsMap.get(lowKey);
+		ShooterDatum highVal = ShooterConstants.kShooterDistanceToRPMsMap.get(highKey);
+		// Math
+
+		m_topSpeed = Lerp(lowKey, highKey, lowVal.m_topSpeed, highVal.m_topSpeed, targetDistance);
+		m_middleSpeed = Lerp(lowKey, highKey, lowVal.m_middleSpeed, highVal.m_middleSpeed, targetDistance);
+		m_bottomSpeed = Lerp(lowKey, highKey, lowVal.m_bottomSpeed, highVal.m_bottomSpeed, targetDistance);
+
+		// never lets bottom speed be greater than top speed
+		m_bottomSpeed = MathUtil.clamp(m_bottomSpeed, 0, m_topSpeed);
+	}
+
+	public double Lerp(double lowKey, double highKey, double lowRPM, double highRPM, double distance) {
+		double percent = (distance - lowKey) / (highKey - lowKey);
+		return (percent) * (highRPM - lowRPM) + lowRPM;
 	}
 
 	@Override
@@ -216,14 +262,15 @@ public class ShooterSubsystem extends SubsystemBase {
 		// m_middleMotorIOld = m_middleMotorI;
 		// m_middleMotorIZoneOld = m_middleMotorIZone;
 		// }
-		// if (m_bottomMotorP != m_bottomMotorPOld || m_bottomMotorI != m_bottomMotorIOld
-		// 		|| m_bottomMotorIZone != m_bottomMotorIZoneOld) {
-		// 	m_bottomConfig.closedLoop.p(m_bottomMotorP).i(m_bottomMotorI).d(m_bottomMotorIZone);
-		// 	m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters,
-		// 			PersistMode.kPersistParameters);
-		// 	m_bottomMotorPOld = m_bottomMotorP;
-		// 	m_bottomMotorIOld = m_bottomMotorI;
-		// 	m_bottomMotorIZoneOld = m_bottomMotorIZone;
+		// if (m_bottomMotorP != m_bottomMotorPOld || m_bottomMotorI !=
+		// m_bottomMotorIOld
+		// || m_bottomMotorIZone != m_bottomMotorIZoneOld) {
+		// m_bottomConfig.closedLoop.p(m_bottomMotorP).i(m_bottomMotorI).d(m_bottomMotorIZone);
+		// m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters,
+		// PersistMode.kPersistParameters);
+		// m_bottomMotorPOld = m_bottomMotorP;
+		// m_bottomMotorIOld = m_bottomMotorI;
+		// m_bottomMotorIZoneOld = m_bottomMotorIZone;
 		// }
 
 		// double topSpeed = m_topController.calculate(getTopMotorSpeed());

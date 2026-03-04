@@ -222,7 +222,9 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
-
+    SmartDashboard.putNumber("Drive X speed", xSpeedDelivered);
+    SmartDashboard.putNumber("Drive Y speed", ySpeedDelivered);
+    SmartDashboard.putNumber("Drive Rot speed", rotDelivered);
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,

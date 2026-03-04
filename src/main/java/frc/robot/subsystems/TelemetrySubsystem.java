@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,5 +41,6 @@ public class TelemetrySubsystem extends SubsystemBase {
     SmartDashboard.putNumber("PDH Port 18 Current", m_PDH.getCurrent(18));
     SmartDashboard.putNumber("PDH Port 19 Current", m_PDH.getCurrent(19));
     SmartDashboard.putNumber("PDH Port 20 Current", m_PDH.getCurrent(20));
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
   }
 }

@@ -68,7 +68,6 @@ public final class Configs {
 	public static final class IntakeSubsystemConfigs {
 		public static final SparkFlexConfig pivotMotorConfig = new SparkFlexConfig();
 		public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
-
 		static {
 			pivotMotorConfig
 					.idleMode(IdleMode.kBrake)
@@ -108,7 +107,8 @@ public final class Configs {
 
 			intakeMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(30);
+					.smartCurrentLimit(30)
+					.inverted(true);
 
 			intakeMotorConfig.encoder
 					.positionConversionFactor(IntakeConstants.kIntakeMotorPositionConversionFactor)
@@ -117,7 +117,7 @@ public final class Configs {
 			intakeMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.pid(0.04, 0, 0)
+					.pid(0.005, 0.000001, 0.005).iZone(1000)
 					.outputRange(-1, 1);
 			// .feedForward.kV(drivingVelocityFeedForward);
 		}
@@ -130,12 +130,12 @@ public final class Configs {
 		static {
 			leftMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(10)
+					.smartCurrentLimit(15)
 					.inverted(true);
 
 			leftMotorConfig.encoder
-					.positionConversionFactor(IntakeConstants.kPivotMotorPositionConversionFactor)
-					.velocityConversionFactor(IntakeConstants.kPivotMotorVelocityConversionFactor);
+					.positionConversionFactor(1.0 / 100.0)
+					.velocityConversionFactor(1.0 / 100.0);
 
 			leftMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -152,11 +152,11 @@ public final class Configs {
 
 			rightMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(10);
+					.smartCurrentLimit(15);
 
 			rightMotorConfig.encoder
-					.positionConversionFactor(IntakeConstants.kIntakeMotorPositionConversionFactor)
-					.velocityConversionFactor(IntakeConstants.kIntakeMotorVelocityConversionFactor);
+					.positionConversionFactor(1.0 / 100.0)
+					.velocityConversionFactor(1.0 / 100.0);
 
 			rightMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)

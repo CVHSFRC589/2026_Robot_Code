@@ -34,15 +34,14 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     m_pivotMotor = new SparkFlex(IntakeConstants.kPivotMotorCanID, MotorType.kBrushless);
     m_pivotController = m_pivotMotor.getClosedLoopController();
-    // m_intakeMotor = new SparkMax(IntakeConstants.kIntakeMotorCanID,
-    // MotorType.kBrushless);
+    m_intakeMotor = new SparkFlex(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushless);
 
     m_pivotMotor.configure(IntakeSubsystemConfigs.pivotMotorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-    // m_intakeMotor.configure(IntakeSubsystemConfigs.intakeMotorConfig,
-    // ResetMode.kResetSafeParameters,
-    // PersistMode.kPersistParameters);
+    m_intakeMotor.configure(IntakeSubsystemConfigs.intakeMotorConfig,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     m_pivotMotorUpperSwitch = m_pivotMotor.getReverseLimitSwitch();
     m_pivotMotorLowerSwitch = m_pivotMotor.getForwardLimitSwitch();
@@ -58,6 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Lower limit switch pressed?", m_pivotMotorLowerSwitch.isPressed());
     SmartDashboard.putBoolean("Retracted Limit Switch Hit", retractedLimitSwitchHit());
     SmartDashboard.putBoolean("Extended Limit Switch Hit", extendedLimitSwitchHit());
+    SmartDashboard.putNumber("Intake Wheel Speed", m_intakeMotor.getEncoder().getVelocity());
 
     if (retractedLimitSwitchHit()) {
       m_pivotMotor.getEncoder().setPosition(0);
@@ -72,6 +72,10 @@ public class IntakeSubsystem extends SubsystemBase {
     m_pivotController.setSetpoint(
         MathUtil.clamp(dutyCycle, -IntakeConstants.kMaxPivotDutyCycle, IntakeConstants.kMaxPivotDutyCycle),
         ControlType.kDutyCycle);
+  }
+
+  public double getPivotPosition() {
+    return m_pivotMotor.getEncoder().getPosition();
   }
 
   public void setAngle(double angleDegrees, ClosedLoopSlot slot) {
