@@ -66,12 +66,12 @@ public class ShooterSubsystem extends SubsystemBase {
 		// .velocityConversionFactor((1.0 / 9.0));
 		m_topConfig.encoder.velocityConversionFactor(1.0);
 		m_topConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(0.0002, ClosedLoopSlot.kSlot0) // change
-				.i(0.000001, ClosedLoopSlot.kSlot0)
-				.d(0, ClosedLoopSlot.kSlot0)
+				.p(0.0004, ClosedLoopSlot.kSlot0) // change
+				.i(0.000002, ClosedLoopSlot.kSlot0)
+				.d(0.01, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
-		m_topConfig.smartCurrentLimit(50);
+		m_topConfig.smartCurrentLimit(40);
 		m_topConfig.inverted(true);
 		m_topMotor.configure(m_topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -82,9 +82,9 @@ public class ShooterSubsystem extends SubsystemBase {
 		// .velocityConversionFactor((1.0 / 9.0));
 		m_middleConfig.encoder.velocityConversionFactor(1.0);
 		m_middleConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(0.0002, ClosedLoopSlot.kSlot0) // change
+				.p(0.0016, ClosedLoopSlot.kSlot0) // change
 				.i(0.000001, ClosedLoopSlot.kSlot0)
-				.d(0, ClosedLoopSlot.kSlot0)
+				.d(0.03, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 		m_middleConfig.inverted(false);
@@ -97,9 +97,9 @@ public class ShooterSubsystem extends SubsystemBase {
 		// .velocityConversionFactor((1.0 / 9.0));
 		m_bottomConfig.encoder.velocityConversionFactor(1.0);
 		m_bottomConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(0.0002, ClosedLoopSlot.kSlot0) // change
+				.p(0.0016, ClosedLoopSlot.kSlot0) // change
 				.i(0.000001, ClosedLoopSlot.kSlot0)
-				.d(0.05, ClosedLoopSlot.kSlot0)
+				.d(0.06, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 		m_bottomConfig.inverted(true);

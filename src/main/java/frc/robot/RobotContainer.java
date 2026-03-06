@@ -172,6 +172,10 @@ public class RobotContainer {
 							return SmartDashboard.getNumber("Bottom Motor Speed Target", 0);
 						},
 						m_shooterSubsystem));
+		SmartDashboard.putNumber("Top Motor Speed Target", 0);
+		SmartDashboard.putNumber("Middle Motor Speed Target", 0);
+		SmartDashboard.putNumber("Bottom Motor Speed Target", 0);
+
 		new JoystickButton(m_testController.getHID(), XboxController.Button.kX.value)
 				.whileTrue(new MoveLeftClimber(m_climberSubsystem, .1));
 		new JoystickButton(m_testController.getHID(), XboxController.Button.kB.value)

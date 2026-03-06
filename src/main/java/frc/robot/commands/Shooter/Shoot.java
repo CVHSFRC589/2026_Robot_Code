@@ -11,12 +11,22 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Shoot extends Command {
-  double m_topSpeed, m_middleSpeed, m_bottomSpeed;
+  DoubleSupplier m_topSpeed, m_middleSpeed, m_bottomSpeed;
   ShooterSubsystem m_shooterSubsystem;
 
   /** Creates a new Shoot. */
-  public Shoot(double topSpeed, double middleSpeed, double bottomSpeed, ShooterSubsystem shooterSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  // public Shoot(double topSpeed, double middleSpeed, double bottomSpeed,
+  // ShooterSubsystem shooterSubsystem) {
+  // // Use addRequirements() here to declare subsystem dependencies.
+  // m_topSpeed = topSpeed;
+  // m_middleSpeed = middleSpeed;
+  // m_bottomSpeed = bottomSpeed;
+  // m_shooterSubsystem = shooterSubsystem;
+  // addRequirements(m_shooterSubsystem);
+  // }
+
+  public Shoot(DoubleSupplier topSpeed, DoubleSupplier middleSpeed, DoubleSupplier bottomSpeed,
+      ShooterSubsystem shooterSubsystem) {
     m_topSpeed = topSpeed;
     m_middleSpeed = middleSpeed;
     m_bottomSpeed = bottomSpeed;
@@ -24,21 +34,12 @@ public class Shoot extends Command {
     addRequirements(m_shooterSubsystem);
   }
 
-  public Shoot(DoubleSupplier topSpeed, DoubleSupplier middleSpeed, DoubleSupplier bottomSpeed,
-      ShooterSubsystem shooterSubsystem) {
-    m_topSpeed = topSpeed.getAsDouble();
-    m_middleSpeed = middleSpeed.getAsDouble();
-    m_bottomSpeed = bottomSpeed.getAsDouble();
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(m_shooterSubsystem);
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setSpeedTop(m_topSpeed);
-    m_shooterSubsystem.setSpeedMiddle(m_middleSpeed);
-    m_shooterSubsystem.setSpeedBottom(m_bottomSpeed);
+    m_shooterSubsystem.setSpeedTop(m_topSpeed.getAsDouble());
+    m_shooterSubsystem.setSpeedMiddle(m_middleSpeed.getAsDouble());
+    m_shooterSubsystem.setSpeedBottom(m_bottomSpeed.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
