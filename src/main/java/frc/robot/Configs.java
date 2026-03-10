@@ -71,7 +71,7 @@ public final class Configs {
 		static {
 			pivotMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(20);
+					.smartCurrentLimit(30);
 
 			pivotMotorConfig.encoder
 					.positionConversionFactor(IntakeConstants.kPivotMotorPositionConversionFactor)
@@ -79,14 +79,15 @@ public final class Configs {
 
 			pivotMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-					.pid(0.04, 0, 0, ClosedLoopSlot.kSlot0)
+					.pid(0.02, 0, 0, ClosedLoopSlot.kSlot0)
 					.outputRange(-1, 1).maxMotion
 					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel0, ClosedLoopSlot.kSlot0)
 					.maxAcceleration(Constants.IntakeConstants.kMaxAccel0, ClosedLoopSlot.kSlot0)
-					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError0, ClosedLoopSlot.kSlot0)
-					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel1, ClosedLoopSlot.kSlot1)
-					.maxAcceleration(Constants.IntakeConstants.kMaxAccel1, ClosedLoopSlot.kSlot1)
-					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError1, ClosedLoopSlot.kSlot1);
+					.allowedProfileError(Constants.IntakeConstants.kAllowedProfileError0, ClosedLoopSlot.kSlot0);
+			// .cruiseVelocity(Constants.IntakeConstants.kCruiseVel1, ClosedLoopSlot.kSlot1)
+			// .maxAcceleration(Constants.IntakeConstants.kMaxAccel1, ClosedLoopSlot.kSlot1)
+			// .allowedProfileError(Constants.IntakeConstants.kAllowedProfileError1,
+			// ClosedLoopSlot.kSlot1);
 			// pivotMotorConfig.closedLoop.feedForward.
 			// .kS(Constants.IntakeConstants.kPivotS, ClosedLoopSlot.kSlot0) // make sure to
 			// change s value
@@ -117,7 +118,7 @@ public final class Configs {
 			intakeMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.pid(0.005, 0.000001, 0.005).iZone(1000)
+					.pid(0.005, 0.000001, 0.01).iZone(500)
 					.outputRange(-1, 1);
 			// .feedForward.kV(drivingVelocityFeedForward);
 		}

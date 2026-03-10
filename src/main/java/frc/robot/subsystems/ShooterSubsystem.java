@@ -23,6 +23,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.NeoMotorConstants;
 // import frc.robot.Constants.NeoVortexConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.data.ShooterDatum;
@@ -39,13 +40,12 @@ public class ShooterSubsystem extends SubsystemBase {
 	double m_topSpeed;
 	double m_middleSpeed;
 	double m_bottomSpeed;
-	double m_topMotorP, m_topMotorI, m_topMotorIZone;
-	double m_middleMotorP, m_middleMotorI, m_middleMotorIZone;
-	double m_bottomMotorP, m_bottomMotorI, m_bottomMotorIZone;
-	double m_topMotorPOld, m_topMotorIOld, m_topMotorIZoneOld;
-	double m_middleMotorPOld, m_middleMotorIOld, m_middleMotorIZoneOld;
-	double m_bottomMotorPOld, m_bottomMotorIOld, m_bottomMotorIZoneOld;
-	PIDController m_topController, m_middleController, m_bottomController;
+	double m_topMotorP, m_topMotorD, m_topMotorFF;
+	double m_middleMotorP, m_middleMotorD, m_middleMotorFF;
+	double m_bottomMotorP, m_bottomMotorD, m_bottomMotorFF;
+	double m_topMotorPOld, m_topMotorDOld, m_topMotorFFOld;
+	double m_middleMotorPOld, m_middleMotorDOld, m_middleMotorFFOld;
+	double m_bottomMotorPOld, m_bottomMotorDOld, m_bottomMotorFFOld;
 	// SparkMaxConfig m_config;
 
 	/** Creates a new ShooterSubsystem. */
@@ -60,35 +60,48 @@ public class ShooterSubsystem extends SubsystemBase {
 		// m_bottomMotor = new SparkMax(ShooterConstants.kBottomMotorCanID,
 		// MotorType.kBrushless);
 
+		m_topMotorP = 0.0004;
+		m_topMotorD = 0.02;
+		m_topMotorFF = 0.00015;
+
 		// Configuring top motor
 		m_topConfig = new SparkFlexConfig();
 		// m_topConfig.encoder // change these values
 		// .velocityConversionFactor((1.0 / 9.0));
 		m_topConfig.encoder.velocityConversionFactor(1.0);
 		m_topConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(0.0004, ClosedLoopSlot.kSlot0) // change
-				.i(0.000002, ClosedLoopSlot.kSlot0)
-				.d(0.01, ClosedLoopSlot.kSlot0)
+				.p(m_topMotorP, ClosedLoopSlot.kSlot0) // change
+				.d(m_topMotorD, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 		m_topConfig.smartCurrentLimit(40);
 		m_topConfig.inverted(true);
+		m_topConfig.closedLoop.feedForward.kV(m_topMotorFF);
 		m_topMotor.configure(m_topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
 		// Configuring middle motor
+
+		m_middleMotorP = 0.0008;
+		m_middleMotorD = 0.001;
+		m_middleMotorFF = 0.0002;
+
 		m_middleConfig = new SparkFlexConfig();
 		// m_middleConfig = new SparkMaxConfig();
 		// m_middleConfig.encoder // change these values
 		// .velocityConversionFactor((1.0 / 9.0));
 		m_middleConfig.encoder.velocityConversionFactor(1.0);
 		m_middleConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(0.0016, ClosedLoopSlot.kSlot0) // change
-				.i(0.000001, ClosedLoopSlot.kSlot0)
-				.d(0.03, ClosedLoopSlot.kSlot0)
+				.p(m_middleMotorP, ClosedLoopSlot.kSlot0) // change
+				.d(m_middleMotorD, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 		m_middleConfig.inverted(false);
+		m_middleConfig.smartCurrentLimit(40);
+		m_middleConfig.closedLoop.feedForward.kV(m_middleMotorFF);
 		m_middleMotor.configure(m_middleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+		m_bottomMotorP = 0.0016;
+		m_bottomMotorD = 0.08;
+		m_bottomMotorFF = 0.0002;
 
 		// Configuring bottom motor
 		m_bottomConfig = new SparkFlexConfig();
@@ -97,12 +110,13 @@ public class ShooterSubsystem extends SubsystemBase {
 		// .velocityConversionFactor((1.0 / 9.0));
 		m_bottomConfig.encoder.velocityConversionFactor(1.0);
 		m_bottomConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(0.0016, ClosedLoopSlot.kSlot0) // change
-				.i(0.000001, ClosedLoopSlot.kSlot0)
-				.d(0.06, ClosedLoopSlot.kSlot0)
+				.p(m_bottomMotorP, ClosedLoopSlot.kSlot0) // change
+				.d(m_bottomMotorD, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 		m_bottomConfig.inverted(true);
+		m_bottomConfig.closedLoop.feedForward.kV(m_bottomMotorFF);
+		m_bottomConfig.smartCurrentLimit(40);
 		m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 		m_closedLoopControllerTop = m_topMotor.getClosedLoopController();
@@ -111,19 +125,16 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_topEncoder = m_topMotor.getEncoder();
 		m_middleEncoder = m_middleMotor.getEncoder();
 		m_bottomEncoder = m_bottomMotor.getEncoder();
-		m_topController = new PIDController(1, 0.1, 0);
-		m_middleController = new PIDController(1, 0.1, 0);
-		m_bottomController = new PIDController(1, 0.1, 0);
 
 		SmartDashboard.putNumber("Bottom Motor P", m_bottomMotorP);
-		SmartDashboard.putNumber("Bottom Motor I", m_bottomMotorI);
-		SmartDashboard.putNumber("Bottom Motor I Zone", m_bottomMotorIZone);
+		SmartDashboard.putNumber("Bottom Motor D", m_bottomMotorD);
+		SmartDashboard.putNumber("Bottom Motor FF", m_bottomMotorFF);
 		SmartDashboard.putNumber("Middle Motor P", m_middleMotorP);
-		SmartDashboard.putNumber("Middle Motor I", m_middleMotorI);
-		SmartDashboard.putNumber("Middle Motor I Zone", m_middleMotorIZone);
+		SmartDashboard.putNumber("Middle Motor D", m_middleMotorD);
+		SmartDashboard.putNumber("Middle Motor FF", m_middleMotorFF);
 		SmartDashboard.putNumber("Top Motor P", m_topMotorP);
-		SmartDashboard.putNumber("Top Motor I", m_topMotorI);
-		SmartDashboard.putNumber("Top Motor I Zone", m_topMotorIZone);
+		SmartDashboard.putNumber("Top Motor D", m_topMotorD);
+		SmartDashboard.putNumber("Top Motor FF", m_topMotorFF);
 	}
 
 	public void voltageToRPM(double voltage) {
@@ -182,6 +193,27 @@ public class ShooterSubsystem extends SubsystemBase {
 		setSpeedBottom(m_bottomSpeed);
 	}
 
+	// internally uses the voltage contol loop instead of velocity pid
+	// uses the motor's Kv rating to convert RPMs to Volts
+	public void setSpeedTopWithVoltage(double speed) {
+		m_closedLoopControllerTop.setSetpoint(speed / NeoMotorConstants.kKV, ControlType.kVoltage,
+				ClosedLoopSlot.kSlot2);
+	}
+
+	// internally uses the voltage contol loop instead of velocity pid
+	// uses the motor's Kv rating to convert RPMs to Volts
+	public void setSpeedMiddleWithVoltage(double speed) {
+		m_closedLoopControllerMiddle.setSetpoint(speed / NeoMotorConstants.kKV, ControlType.kVoltage,
+				ClosedLoopSlot.kSlot2);
+	}
+
+	// internally uses the voltage contol loop instead of velocity pid
+	// uses the motor's Kv rating to convert RPMs to Volts
+	public void setSpeedBottomWithVoltage(double speed) {
+		m_closedLoopControllerBottom.setSetpoint(speed / NeoMotorConstants.kKV, ControlType.kVoltage,
+				ClosedLoopSlot.kSlot2);
+	}
+
 	// in rpm
 	public double getTopMotorSpeed() {
 		return m_topEncoder.getVelocity();
@@ -233,45 +265,43 @@ public class ShooterSubsystem extends SubsystemBase {
 		SmartDashboard.putNumber("Middle Motor Speed", getMiddleMotorSpeed());
 		SmartDashboard.putNumber("Bottom Motor Speed", getBottomMotorSpeed());
 		m_bottomMotorP = SmartDashboard.getNumber("Bottom Motor P", m_bottomMotorPOld);
-		m_bottomMotorI = SmartDashboard.getNumber("Bottom Motor I", m_bottomMotorIOld);
-		m_bottomMotorIZone = SmartDashboard.getNumber("Bottom Motor I Zone", m_bottomMotorIZoneOld);
+		m_bottomMotorD = SmartDashboard.getNumber("Bottom Motor D", m_bottomMotorDOld);
+		m_bottomMotorFF = SmartDashboard.getNumber("Bottom Motor FF", m_bottomMotorFFOld);
 		m_middleMotorP = SmartDashboard.getNumber("Middle Motor P", m_middleMotorPOld);
-		m_middleMotorI = SmartDashboard.getNumber("Middle Motor I", m_middleMotorIOld);
-		m_middleMotorIZone = SmartDashboard.getNumber("Middle Motor I Zone", m_middleMotorIZoneOld);
+		m_middleMotorD = SmartDashboard.getNumber("Middle Motor D", m_middleMotorDOld);
+		m_middleMotorFF = SmartDashboard.getNumber("Middle Motor FF", m_middleMotorFFOld);
 		m_topMotorP = SmartDashboard.getNumber("Top Motor P", m_topMotorPOld);
-		m_topMotorI = SmartDashboard.getNumber("Top Motor I", m_topMotorIOld);
-		m_topMotorIZone = SmartDashboard.getNumber("Top Motor I Zone", m_topMotorIZoneOld);
+		m_topMotorD = SmartDashboard.getNumber("Top Motor D", m_topMotorDOld);
+		m_topMotorFF = SmartDashboard.getNumber("Top Motor FF", m_topMotorFFOld);
 
-		// if (m_topMotorP != m_topMotorPOld || m_topMotorI != m_topMotorIOld ||
-		// m_topMotorIZone != m_topMotorIZoneOld) {
-		// m_topConfig.closedLoop.p(m_topMotorP).i(m_topMotorI).iZone(m_topMotorIZone);
-		// m_topMotor.configure(m_topConfig, ResetMode.kResetSafeParameters,
-		// PersistMode.kPersistParameters);
-		// m_topMotorPOld = m_topMotorP;
-		// m_topMotorIOld = m_topMotorI;
-		// m_topMotorIZoneOld = m_topMotorIZone;
-		// System.out.println("reconfiguring top motor");
-		// }
-		// if (m_middleMotorP != m_middleMotorPOld || m_middleMotorI !=
-		// m_middleMotorIOld
-		// || m_middleMotorIZone != m_middleMotorIZoneOld) {
-		// m_middleConfig.closedLoop.p(m_middleMotorP).i(m_middleMotorI).iZone(m_middleMotorIZone);
-		// m_middleMotor.configure(m_middleConfig, ResetMode.kResetSafeParameters,
-		// PersistMode.kPersistParameters);
-		// m_middleMotorPOld = m_middleMotorP;
-		// m_middleMotorIOld = m_middleMotorI;
-		// m_middleMotorIZoneOld = m_middleMotorIZone;
-		// }
-		// if (m_bottomMotorP != m_bottomMotorPOld || m_bottomMotorI !=
-		// m_bottomMotorIOld
-		// || m_bottomMotorIZone != m_bottomMotorIZoneOld) {
-		// m_bottomConfig.closedLoop.p(m_bottomMotorP).i(m_bottomMotorI).d(m_bottomMotorIZone);
-		// m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters,
-		// PersistMode.kPersistParameters);
-		// m_bottomMotorPOld = m_bottomMotorP;
-		// m_bottomMotorIOld = m_bottomMotorI;
-		// m_bottomMotorIZoneOld = m_bottomMotorIZone;
-		// }
+		if (m_topMotorP != m_topMotorPOld || m_topMotorD != m_topMotorDOld ||
+				m_topMotorFF != m_topMotorFFOld) {
+			m_topConfig.closedLoop.p(m_topMotorP).d(m_topMotorD).feedForward.kV(m_topMotorFF);
+			m_topMotor.configure(m_topConfig, ResetMode.kResetSafeParameters,
+					PersistMode.kPersistParameters);
+			m_topMotorPOld = m_topMotorP;
+			m_topMotorDOld = m_topMotorD;
+			m_topMotorFFOld = m_topMotorFF;
+			System.out.println("reconfiguring top motor");
+		}
+		if (m_middleMotorP != m_middleMotorPOld || m_middleMotorD != m_middleMotorDOld
+				|| m_middleMotorFF != m_middleMotorFFOld) {
+			m_middleConfig.closedLoop.p(m_middleMotorP).d(m_middleMotorD).feedForward.kV(m_middleMotorFF);
+			m_middleMotor.configure(m_middleConfig, ResetMode.kResetSafeParameters,
+					PersistMode.kPersistParameters);
+			m_middleMotorPOld = m_middleMotorP;
+			m_middleMotorDOld = m_middleMotorD;
+			m_middleMotorFFOld = m_middleMotorFF;
+		}
+		if (m_bottomMotorP != m_bottomMotorPOld || m_bottomMotorD != m_bottomMotorDOld
+				|| m_bottomMotorFF != m_bottomMotorFFOld) {
+			m_bottomConfig.closedLoop.p(m_bottomMotorP).d(m_bottomMotorD).feedForward.kV(m_bottomMotorFF);
+			m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters,
+					PersistMode.kPersistParameters);
+			m_bottomMotorPOld = m_bottomMotorP;
+			m_bottomMotorDOld = m_bottomMotorD;
+			m_bottomMotorFFOld = m_bottomMotorFF;
+		}
 
 		// double topSpeed = m_topController.calculate(getTopMotorSpeed());
 		// // System.out.println(topSpeed);

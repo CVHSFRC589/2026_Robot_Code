@@ -97,7 +97,7 @@ public final class Constants {
 		public static final double kIntakeMotorPositionConversionFactor = 1.0;
 		public static final double kIntakeMotorVelocityConversionFactor = 1.0;
 
-		public static final double kExtendPivotAngle = 364555.25;
+		public static final double kExtendPivotAngle = 160;
 		public static final double kRetractedPivotAngle = 0;
 
 		public static final double kMaxPivotDutyCycle = 0.25;
@@ -115,6 +115,8 @@ public final class Constants {
 		public static final double kPivotA = 0.06;
 		public static final double kPivotCos = 3; // old = 0.15
 		public static final double kPivotCosRatio = 1.0; // Either 50 or 1/50
+
+		public static final double kIntakeFullSpeed = 4000; // in rpm
 	}
 
 	public static final class ClimberConstants {
@@ -195,7 +197,8 @@ public final class Constants {
 	}
 
 	public static final class NeoMotorConstants {
-		public static final double kFreeSpeedRpm = 5676;
+		public static final double kFreeSpeedRpm = 6784;
+		public static final double kKV = 565;
 	}
 
 	public static final class CameraConstants {

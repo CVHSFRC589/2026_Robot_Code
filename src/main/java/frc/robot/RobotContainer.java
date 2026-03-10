@@ -43,10 +43,12 @@ import frc.robot.commands.Climber.MoveRightClimber;
 import frc.robot.commands.Climber.RetractClimbersDutyCycle;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.HomeIntake;
-import frc.robot.commands.Intake.RunIntake;
+import frc.robot.commands.Intake.RunIntakeOG;
 import frc.robot.commands.Intake.SetPivotDegree;
+import frc.robot.commands.Intake.SetSpeedIntake;
 import frc.robot.commands.Shooter.FeedFuelAtTarget;
 import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.Shooter.ShootWithVoltage;
 import frc.robot.commands.Shooter.SpinToDistanceTargetSpeed;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -92,6 +94,10 @@ public class RobotContainer {
 		System.out.println("April tag layout field width: " + m_fieldLayout.getFieldWidth());
 		configureButtonBindings();
 		autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser.addOption("Spin Up Shooter", new SpinToDistanceTargetSpeed(m_shooterSubsystem));
+		autoChooser.addOption("Extend Intake", new ExtendIntake(m_intakeSubsystem));
+		autoChooser.addOption("Run Intake At Max Speed",
+				new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed));
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		m_alliance = DriverStation.getAlliance().get();
 
@@ -151,7 +157,8 @@ public class RobotContainer {
 		new JoystickButton(m_testController.getHID(), XboxController.Button.kLeftBumper.value)
 				.whileTrue(new SpinToDistanceTargetSpeed(m_shooterSubsystem));
 		// m_testController.start().whileTrue(new RunIntake(m_intakeSubsystem));
-		m_testController.start().toggleOnTrue(new RunIntake(m_intakeSubsystem));
+		m_testController.start().toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, 0.4));
+		m_testController.rightTrigger().whileTrue(new SetSpeedIntake(m_intakeSubsystem, -0.4));
 		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).whileTrue(
 				new HomeIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kX.value)
@@ -186,6 +193,7 @@ public class RobotContainer {
 				.whileTrue(new MoveRightClimber(m_climberSubsystem, -.1));
 		m_testController.povDown().whileTrue(new RetractClimbersDutyCycle(m_climberSubsystem));
 		m_testController.povUp().whileTrue(new ExtendClimbersDutyCycle(m_climberSubsystem));
+		m_testController.povLeft().whileTrue(new ExtendIntake(m_intakeSubsystem));
 		// auto aim commands (change these to operator board)
 		// pass to left setpoint
 		new POVButton(m_driverController, 270).whileTrue(

@@ -4,16 +4,18 @@
 
 package frc.robot.commands.Intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class HomeIntake extends Command {
-  private IntakeSubsystem m_intakeSubsystem;
+public class RunIntakeOG extends Command {
+  IntakeSubsystem m_intakeSubsystem;
 
-  /** Creates a new Home. */
-  public HomeIntake(IntakeSubsystem intakeSubsystem) {
+  /** Creates a new RunIntake. */
+  public RunIntakeOG(IntakeSubsystem intakeSubsystem) {
     m_intakeSubsystem = intakeSubsystem;
     addRequirements(intakeSubsystem);
   }
@@ -21,27 +23,27 @@ public class HomeIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intakeSubsystem.set(-0.5); // is negative home direction?
+    // m_intakeSubsystem.m_intakeMotor.getClosedLoopController().setSetpoint(4000,
+    // ControlType.kVelocity,
+    // ClosedLoopSlot.kSlot0);
+    m_intakeSubsystem.m_intakeMotor.set(.40);
+    // m_intakeSubsystem.m_intakeMotor.set(0.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted) {
-      m_intakeSubsystem.resetPivotEncoder();
-    }
-    m_intakeSubsystem.set(0);
+    m_intakeSubsystem.m_intakeMotor.set(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_intakeSubsystem.retractedLimitSwitchHit();
+    return false;
   }
 }
