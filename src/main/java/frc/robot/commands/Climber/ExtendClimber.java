@@ -23,7 +23,7 @@ public class ExtendClimber extends Command {
   @Override
   public void initialize() {
     m_climberSubsystem.setLeftClimberPosition(ClimberConstants.kMaxExtendDistance);
-    m_climberSubsystem.setLeftClimberPosition(ClimberConstants.kMaxExtendDistance);
+    m_climberSubsystem.setRightClimberPosition(ClimberConstants.kMaxExtendDistance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

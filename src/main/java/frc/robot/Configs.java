@@ -118,8 +118,9 @@ public final class Configs {
 			intakeMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.pid(0.005, 0.000001, 0.01).iZone(500)
-					.outputRange(-1, 1);
+					.p(0.01)
+					.outputRange(-1, 1)
+					.d(0.05).feedForward.kV(0.001);
 			// .feedForward.kV(drivingVelocityFeedForward);
 		}
 	}
@@ -135,13 +136,13 @@ public final class Configs {
 					.inverted(true);
 
 			leftMotorConfig.encoder
-					.positionConversionFactor(1.0 / 100.0)
-					.velocityConversionFactor(1.0 / 100.0);
+					.positionConversionFactor(ClimberConstants.kMotorPositionConversionFactor)
+					.velocityConversionFactor(ClimberConstants.kMotorVelocityConversionFactor);
 
 			leftMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.pid(0.04, 0, 0)
+					.pid(ClimberConstants.kMotorP, ClimberConstants.kMotorI, 0)
 					.outputRange(-1, 1);
 			// .feedForward.kV(drivingVelocityFeedForward);
 
@@ -156,13 +157,13 @@ public final class Configs {
 					.smartCurrentLimit(15);
 
 			rightMotorConfig.encoder
-					.positionConversionFactor(1.0 / 100.0)
-					.velocityConversionFactor(1.0 / 100.0);
+					.positionConversionFactor(ClimberConstants.kMotorPositionConversionFactor)
+					.velocityConversionFactor(ClimberConstants.kMotorVelocityConversionFactor);
 
 			rightMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.pid(0.04, 0, 0)
+					.pid(ClimberConstants.kMotorP, ClimberConstants.kMotorI, 0)
 					.outputRange(-1, 1);
 			// .feedForward.kV(drivingVelocityFeedForward);
 

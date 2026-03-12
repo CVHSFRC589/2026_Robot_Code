@@ -65,7 +65,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public Climber(int CanID, SparkBaseConfig motorConfig) {
       m_motor = new SparkMax(CanID, MotorType.kBrushless);
       m_motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      m_limitSwitch = m_motor.getReverseLimitSwitch();
+      m_limitSwitch = m_motor.getForwardLimitSwitch();
 
       m_controller = m_motor.getClosedLoopController();
     }

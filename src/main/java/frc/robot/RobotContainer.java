@@ -40,6 +40,7 @@ import frc.robot.commands.Climber.ExtendClimbersDutyCycle;
 import frc.robot.commands.Climber.HomeClimber;
 import frc.robot.commands.Climber.MoveLeftClimber;
 import frc.robot.commands.Climber.MoveRightClimber;
+import frc.robot.commands.Climber.RetractClimber;
 import frc.robot.commands.Climber.RetractClimbersDutyCycle;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.HomeIntake;
@@ -56,6 +57,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TelemetrySubsystem;
+import frc.robot.subsystems.ClimberSubsystem.Climber;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -163,10 +165,13 @@ public class RobotContainer {
 				new HomeIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kX.value)
 				.whileTrue(new HomeIntake(m_intakeSubsystem));
-		new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
-				.whileTrue(new HomeClimber(m_climberSubsystem));
+		// new JoystickButton(m_driverController,
+		// XboxController.Button.kLeftBumper.value)
+		// .whileTrue(new HomeClimber(m_climberSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kBack.value)
 				.whileTrue(new ExtendClimber(m_climberSubsystem));
+		new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+				.whileTrue(new RetractClimber(m_climberSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kStart.value)
 				.whileTrue(new Shoot(
 						() -> {
@@ -194,6 +199,10 @@ public class RobotContainer {
 		m_testController.povDown().whileTrue(new RetractClimbersDutyCycle(m_climberSubsystem));
 		m_testController.povUp().whileTrue(new ExtendClimbersDutyCycle(m_climberSubsystem));
 		m_testController.povLeft().whileTrue(new ExtendIntake(m_intakeSubsystem));
+		m_testController.leftStick().whileTrue(new InstantCommand(() -> {
+			m_climberSubsystem.m_leftClimber.m_motor.getEncoder().setPosition(0);
+			m_climberSubsystem.m_rightClimber.m_motor.getEncoder().setPosition(0);
+		}, m_climberSubsystem));
 		// auto aim commands (change these to operator board)
 		// pass to left setpoint
 		new POVButton(m_driverController, 270).whileTrue(

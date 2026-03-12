@@ -80,7 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_topMotor.configure(m_topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 		// Configuring middle motor
 
-		m_middleMotorP = 0.0008;
+		m_middleMotorP = 0.001;
 		m_middleMotorD = 0.001;
 		m_middleMotorFF = 0.0002;
 
@@ -99,9 +99,9 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_middleConfig.closedLoop.feedForward.kV(m_middleMotorFF);
 		m_middleMotor.configure(m_middleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-		m_bottomMotorP = 0.0016;
-		m_bottomMotorD = 0.08;
-		m_bottomMotorFF = 0.0002;
+		m_bottomMotorP = 0.005;
+		m_bottomMotorD = 0.09;
+		m_bottomMotorFF = 0.00025; // needs to be bigger
 
 		// Configuring bottom motor
 		m_bottomConfig = new SparkFlexConfig();

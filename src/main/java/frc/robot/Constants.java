@@ -124,7 +124,11 @@ public final class Constants {
 		public static final int kRightMotorCanID = 56;
 		public static final double kMaxSpeed = 0.1;
 
-		public static final double kMaxExtendDistance = 0.0;
+		public static final double kMotorP = 0.1;
+		public static final double kMotorI = 0.0;
+
+		public static final double kMaxExtendDistance = 24.0;
+		public static final double kMaxRetractDistance = 1.0;
 		public static final double kHomeDutyCycle = -0.2; // keep this value small (0 is no power, 1 is full power)
 
 		public static final double kMaxExtendVelocity = 0.1;
@@ -136,8 +140,12 @@ public final class Constants {
 		public static final double kPinionGearDP = 10;
 		public static final double kPinionGearRadius = kPinionGearTeeth / (2 * kPinionGearDP);
 		public static final double kGearboxReduction = 1 / 100;
-		public static final double kMotorPositionConversionFactor = kGearboxReduction * kPinionGearRadius;
-		public static final double kMotorVelocityConversionFactor = kGearboxReduction * kPinionGearRadius;
+		// public static final double kMotorPositionConversionFactor = kGearboxReduction
+		// * kPinionGearRadius;
+		public static final double kMotorPositionConversionFactor = 12.0 / 100.0;
+		// public static final double kMotorVelocityConversionFactor = kGearboxReduction
+		// * kPinionGearRadius;
+		public static final double kMotorVelocityConversionFactor = 12.0 / 100.0;
 	}
 
 	public static final class ShooterConstants {
@@ -202,7 +210,10 @@ public final class Constants {
 	}
 
 	public static final class CameraConstants {
-		public static final Transform3d kRobotToCam = new Transform3d(
+		public static final Transform3d kRobotToFrontCam = new Transform3d(
+				new Translation3d(Units.inchesToMeters(6.5), 0.0, Units.inchesToMeters(24.5)),
+				new Rotation3d(0, 0, 0));
+		public static final Transform3d kRobotToBackCam = new Transform3d(
 				new Translation3d(Units.inchesToMeters(6.5), 0.0, Units.inchesToMeters(24.5)),
 				new Rotation3d(0, 0, 0));
 		public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1); // old: 4, 4, 8
