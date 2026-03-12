@@ -107,7 +107,7 @@ public final class Configs {
 			// .feedForward.kV(drivingVelocityFeedForward);
 
 			intakeMotorConfig
-					.idleMode(IdleMode.kBrake)
+					.idleMode(IdleMode.kCoast)
 					.smartCurrentLimit(30)
 					.inverted(true);
 
@@ -118,9 +118,9 @@ public final class Configs {
 			intakeMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.p(0.01)
+					.p(0.001)
 					.outputRange(-1, 1)
-					.d(0.05).feedForward.kV(0.001);
+					.d(0.06).feedForward.kS(.1);
 			// .feedForward.kV(drivingVelocityFeedForward);
 		}
 	}

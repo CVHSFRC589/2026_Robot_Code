@@ -123,7 +123,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
   public void estimatePose2d() {
     List<PhotonPipelineResult> front_results = m_topFrontCamera.getAllUnreadResults();
-    List<PhotonPipelineResult> back_results = m_topFrontCamera.getAllUnreadResults();
+    List<PhotonPipelineResult> back_results = m_topBackCamera.getAllUnreadResults();
     Optional<EstimatedRobotPose> visionEstimate = Optional.empty();
 
     // front camera

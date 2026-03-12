@@ -51,6 +51,7 @@ import frc.robot.commands.Shooter.FeedFuelAtTarget;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.ShootWithVoltage;
 import frc.robot.commands.Shooter.SpinToDistanceTargetSpeed;
+import frc.robot.commands.Shooter.SpinUpToInputTargets;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -78,6 +79,7 @@ public class RobotContainer {
 
 	// The driver's controller
 	XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+	CommandXboxController m_operatorController = new CommandXboxController(1);
 	CommandXboxController m_testController = new CommandXboxController(5);
 
 	AprilTagFieldLayout m_fieldLayout;
@@ -159,8 +161,8 @@ public class RobotContainer {
 		new JoystickButton(m_testController.getHID(), XboxController.Button.kLeftBumper.value)
 				.whileTrue(new SpinToDistanceTargetSpeed(m_shooterSubsystem));
 		// m_testController.start().whileTrue(new RunIntake(m_intakeSubsystem));
-		m_testController.start().toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, 0.4));
-		m_testController.rightTrigger().whileTrue(new SetSpeedIntake(m_intakeSubsystem, -0.4));
+		m_testController.start().toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, 3000));
+		m_testController.rightTrigger().whileTrue(new SetSpeedIntake(m_intakeSubsystem, -3000));
 		new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value).whileTrue(
 				new HomeIntake(m_intakeSubsystem));
 		new JoystickButton(m_driverController, XboxController.Button.kX.value)
@@ -239,6 +241,7 @@ public class RobotContainer {
 					// System.out.println("setting top motor speed to 0");
 				}, m_shooterSubsystem));
 
+		// m_operatorController.leftTrigger().whileTrue(new SpinUpToInputTargets());
 	}
 
 	private double getDriverControllerProcessedLeftStickX() {

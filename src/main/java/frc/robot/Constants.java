@@ -45,8 +45,8 @@ public final class Constants {
 	public static final class DriveConstants {
 		// Driving Parameters - Note that these are not the maximum capable speeds of
 		// the robot, rather the allowed maximum speeds
-		public static final double kMaxSpeedMetersPerSecond = 4.8 / 8; // old is 4.8
-		public static final double kMaxAngularSpeed = 2 * Math.PI / 8; // radians per second // old is 2 * Math.PI
+		public static final double kMaxSpeedMetersPerSecond = 4.8 / 2; // old is 4.8
+		public static final double kMaxAngularSpeed = 2 * Math.PI / 2; // radians per second // old is 2 * Math.PI
 
 		// Chassis configuration
 		// public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -210,12 +210,16 @@ public final class Constants {
 	}
 
 	public static final class CameraConstants {
-		public static final Transform3d kRobotToFrontCam = new Transform3d(
-				new Translation3d(Units.inchesToMeters(6.5), 0.0, Units.inchesToMeters(24.5)),
-				new Rotation3d(0, 0, 0));
-		public static final Transform3d kRobotToBackCam = new Transform3d(
-				new Translation3d(Units.inchesToMeters(6.5), 0.0, Units.inchesToMeters(24.5)),
-				new Rotation3d(0, 0, 0));
+		public static final Transform3d kRobotToFrontCam = new Transform3d( // seems to be incorrect in sign or
+																			// something similar
+				new Translation3d(Units.inchesToMeters(11.090), Units.inchesToMeters(-8.75),
+						Units.inchesToMeters(19.7204)),
+				new Rotation3d(0, 32, 0));
+		public static final Transform3d kRobotToBackCam = new Transform3d( // seems to be more correct than the forward
+																			// camera
+				new Translation3d(Units.inchesToMeters(-11.0697), Units.inchesToMeters(11.125),
+						Units.inchesToMeters(17.467)),
+				new Rotation3d(0, 160, 0));
 		public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1); // old: 4, 4, 8
 		public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 	}

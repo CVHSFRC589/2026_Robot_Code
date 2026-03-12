@@ -42,10 +42,10 @@ public class ShooterSubsystem extends SubsystemBase {
 	double m_bottomSpeed;
 	double m_topMotorP, m_topMotorD, m_topMotorFF;
 	double m_middleMotorP, m_middleMotorD, m_middleMotorFF;
-	double m_bottomMotorP, m_bottomMotorD, m_bottomMotorFF;
+	double m_bottomMotorP, m_bottomMotorD, m_bottomMotorFF, m_bottomMotorSFF;
 	double m_topMotorPOld, m_topMotorDOld, m_topMotorFFOld;
 	double m_middleMotorPOld, m_middleMotorDOld, m_middleMotorFFOld;
-	double m_bottomMotorPOld, m_bottomMotorDOld, m_bottomMotorFFOld;
+	double m_bottomMotorPOld, m_bottomMotorDOld, m_bottomMotorFFOld, m_bottomMotorSFFOld;
 	// SparkMaxConfig m_config;
 
 	/** Creates a new ShooterSubsystem. */
@@ -101,21 +101,22 @@ public class ShooterSubsystem extends SubsystemBase {
 
 		m_bottomMotorP = 0.005;
 		m_bottomMotorD = 0.09;
-		m_bottomMotorFF = 0.00025; // needs to be bigger
+		m_bottomMotorFF = 0.1; // needs to be bigger
+		m_bottomMotorSFF = 0.0;
 
 		// Configuring bottom motor
 		m_bottomConfig = new SparkFlexConfig();
 		// m_bottomConfig = new SparkMaxConfig();
 		// m_bottomConfig.encoder // change these values
 		// .velocityConversionFactor((1.0 / 9.0));
-		m_bottomConfig.encoder.velocityConversionFactor(1.0);
+		m_bottomConfig.encoder.velocityConversionFactor(1.0 / 3.0);
 		m_bottomConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 				.p(m_bottomMotorP, ClosedLoopSlot.kSlot0) // change
 				.d(m_bottomMotorD, ClosedLoopSlot.kSlot0)
 				.outputRange(-1, 1);
 		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 		m_bottomConfig.inverted(true);
-		m_bottomConfig.closedLoop.feedForward.kV(m_bottomMotorFF);
+		m_bottomConfig.closedLoop.feedForward.kV(m_bottomMotorFF).kS(m_bottomMotorSFF);
 		m_bottomConfig.smartCurrentLimit(40);
 		m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -129,6 +130,7 @@ public class ShooterSubsystem extends SubsystemBase {
 		SmartDashboard.putNumber("Bottom Motor P", m_bottomMotorP);
 		SmartDashboard.putNumber("Bottom Motor D", m_bottomMotorD);
 		SmartDashboard.putNumber("Bottom Motor FF", m_bottomMotorFF);
+		SmartDashboard.putNumber("Bottom Motor Static FF", m_bottomMotorSFF);
 		SmartDashboard.putNumber("Middle Motor P", m_middleMotorP);
 		SmartDashboard.putNumber("Middle Motor D", m_middleMotorD);
 		SmartDashboard.putNumber("Middle Motor FF", m_middleMotorFF);
@@ -267,6 +269,7 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_bottomMotorP = SmartDashboard.getNumber("Bottom Motor P", m_bottomMotorPOld);
 		m_bottomMotorD = SmartDashboard.getNumber("Bottom Motor D", m_bottomMotorDOld);
 		m_bottomMotorFF = SmartDashboard.getNumber("Bottom Motor FF", m_bottomMotorFFOld);
+		m_bottomMotorSFF = SmartDashboard.getNumber("Bottom Motor Static FF", m_bottomMotorSFFOld);
 		m_middleMotorP = SmartDashboard.getNumber("Middle Motor P", m_middleMotorPOld);
 		m_middleMotorD = SmartDashboard.getNumber("Middle Motor D", m_middleMotorDOld);
 		m_middleMotorFF = SmartDashboard.getNumber("Middle Motor FF", m_middleMotorFFOld);
@@ -294,13 +297,14 @@ public class ShooterSubsystem extends SubsystemBase {
 			m_middleMotorFFOld = m_middleMotorFF;
 		}
 		if (m_bottomMotorP != m_bottomMotorPOld || m_bottomMotorD != m_bottomMotorDOld
-				|| m_bottomMotorFF != m_bottomMotorFFOld) {
-			m_bottomConfig.closedLoop.p(m_bottomMotorP).d(m_bottomMotorD).feedForward.kV(m_bottomMotorFF);
+				|| m_bottomMotorFF != m_bottomMotorFFOld || m_bottomMotorSFF != m_bottomMotorSFFOld) {
+			m_bottomConfig.closedLoop.p(m_bottomMotorP).d(m_bottomMotorD).feedForward.kV(m_bottomMotorFF).kS(m_bottomMotorSFF);
 			m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters,
 					PersistMode.kPersistParameters);
 			m_bottomMotorPOld = m_bottomMotorP;
 			m_bottomMotorDOld = m_bottomMotorD;
 			m_bottomMotorFFOld = m_bottomMotorFF;
+			m_bottomMotorSFFOld = m_bottomMotorSFF;
 		}
 
 		// double topSpeed = m_topController.calculate(getTopMotorSpeed());

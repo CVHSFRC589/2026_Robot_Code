@@ -35,6 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     m_pivotMotor = new SparkFlex(IntakeConstants.kPivotMotorCanID, MotorType.kBrushless);
     m_pivotController = m_pivotMotor.getClosedLoopController();
     m_intakeMotor = new SparkFlex(IntakeConstants.kIntakeMotorCanID, MotorType.kBrushless);
+    m_intakeController = m_intakeMotor.getClosedLoopController();
 
     m_pivotMotor.configure(IntakeSubsystemConfigs.pivotMotorConfig,
         ResetMode.kResetSafeParameters,
