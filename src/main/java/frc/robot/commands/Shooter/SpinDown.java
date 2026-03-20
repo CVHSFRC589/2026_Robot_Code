@@ -14,6 +14,7 @@ public class SpinDown extends Command {
   /** Creates a new SpinDown. */
   public SpinDown(ShooterSubsystem shooterSubsystem) {
     m_shooterSubsystem = shooterSubsystem;
+    addRequirements(m_shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.

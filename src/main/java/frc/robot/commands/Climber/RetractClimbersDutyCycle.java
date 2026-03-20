@@ -15,6 +15,7 @@ public class RetractClimbersDutyCycle extends Command {
   /** Creates a new RetractClimbersDutyCycle. */
   public RetractClimbersDutyCycle(ClimberSubsystem climbersubsystem) {
     m_climberSubsystem = climbersubsystem;
+    addRequirements(m_climberSubsystem);
   }
 
   // Called when the command is initially scheduled.

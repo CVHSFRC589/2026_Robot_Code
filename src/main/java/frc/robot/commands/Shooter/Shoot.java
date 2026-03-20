@@ -7,6 +7,7 @@ package frc.robot.commands.Shooter;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -34,17 +35,35 @@ public class Shoot extends Command {
     addRequirements(m_shooterSubsystem);
   }
 
+  public Shoot(ShooterSubsystem shooterSubsystem) {
+    m_topSpeed = () -> {
+      return ShooterConstants.kBottomMotorSpinUpSpeed;
+    };
+    m_middleSpeed = () -> {
+      return ShooterConstants.kMiddleMotorSpinUpSpeed;
+
+    };
+    m_bottomSpeed = () -> {
+      return ShooterConstants.kBottomMotorSpinUpSpeed;
+    };
+    m_shooterSubsystem = shooterSubsystem;
+    addRequirements(m_shooterSubsystem);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setSpeedTop(m_topSpeed.getAsDouble());
-    m_shooterSubsystem.setSpeedMiddle(m_middleSpeed.getAsDouble());
-    m_shooterSubsystem.setSpeedBottom(m_bottomSpeed.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_shooterSubsystem.setSpeedTop(m_topSpeed.getAsDouble());
+    System.out.println("Top Speed: " + m_topSpeed.getAsDouble());
+    m_shooterSubsystem.setSpeedMiddle(m_middleSpeed.getAsDouble());
+    System.out.println("Middle Speed: " + m_middleSpeed.getAsDouble());
+    m_shooterSubsystem.setSpeedBottom(m_bottomSpeed.getAsDouble());
+    System.out.println("Bottom Speed: " + m_bottomSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

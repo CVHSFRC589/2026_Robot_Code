@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public final class Configs {
 	public static final class MAXSwerveModule {
@@ -118,9 +119,9 @@ public final class Configs {
 			intakeMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.p(0.001)
+					.p(0.0125)
 					.outputRange(-1, 1)
-					.d(0.06).feedForward.kS(.1);
+					.d(0.05).feedForward.kS(8).kV(0.05);
 			// .feedForward.kV(drivingVelocityFeedForward);
 		}
 	}
@@ -172,6 +173,54 @@ public final class Configs {
 					.cruiseVelocity(ClimberConstants.kMaxRetractVelocity, ClosedLoopSlot.kSlot1)
 					.maxAcceleration(ClimberConstants.kMaxExtendAcceleration, ClosedLoopSlot.kSlot0)
 					.maxAcceleration(ClimberConstants.kMaxRetractAcceleration, ClosedLoopSlot.kSlot1);
+		}
+	}
+
+	public static final class ShooterSubsystemConfigs {
+		public static final SparkFlexConfig topMotorConfig = new SparkFlexConfig();
+		public static final SparkFlexConfig middleMotorConfig = new SparkFlexConfig();
+		public static final SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
+
+		static {
+			// m_topConfig.encoder // change these values
+			// .velocityConversionFactor((1.0 / 9.0));
+			topMotorConfig.encoder.velocityConversionFactor(1.0);
+			topMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+					.p(ShooterConstants.kTopMotorP, ClosedLoopSlot.kSlot0) // change
+					.d(ShooterConstants.kTopMotorD, ClosedLoopSlot.kSlot0)
+					.outputRange(-1, 1);
+			// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
+			topMotorConfig.smartCurrentLimit(40);
+			topMotorConfig.inverted(true);
+			topMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kTopMotorFF);
+
+			// m_middleConfig = new SparkMaxConfig();
+			// m_middleConfig.encoder // change these values
+			// .velocityConversionFactor((1.0 / 9.0));
+			middleMotorConfig.encoder.velocityConversionFactor(1.0);
+			middleMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+					.p(ShooterConstants.kMiddleMotorP, ClosedLoopSlot.kSlot0) // change
+					.d(ShooterConstants.kMiddleMotorD, ClosedLoopSlot.kSlot0)
+					.outputRange(-1, 1);
+			// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
+			middleMotorConfig.inverted(false);
+			middleMotorConfig.smartCurrentLimit(40);
+			middleMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kMiddleMotorFF);
+
+			// m_bottomConfig = new SparkMaxConfig();
+			// m_bottomConfig.encoder // change these values
+			// .velocityConversionFactor((1.0 / 9.0));
+			bottomMotorConfig.encoder.velocityConversionFactor(1.0 / 5.0);
+			bottomMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+					.p(ShooterConstants.kBottomMotorP, ClosedLoopSlot.kSlot0) // change
+					.i(ShooterConstants.kBottomMotorI, ClosedLoopSlot.kSlot0)
+					.d(ShooterConstants.kBottomMotorD, ClosedLoopSlot.kSlot0)
+					.outputRange(-1, 1);
+			// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
+			bottomMotorConfig.inverted(true);
+			bottomMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kBottomMotorFF)
+					.kS(ShooterConstants.kBottomMotorSFF);
+			bottomMotorConfig.smartCurrentLimit(40);
 		}
 	}
 }

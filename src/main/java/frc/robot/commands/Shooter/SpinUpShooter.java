@@ -2,33 +2,34 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Climber;
+package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RetractClimber extends Command {
-  ClimberSubsystem m_climberSubsystem;
+public class SpinUpShooter extends Command {
+  ShooterSubsystem m_shooterSubsystem;
 
-  /** Creates a new RetractClimber. */
-  public RetractClimber(ClimberSubsystem climberSubsystem) {
-    m_climberSubsystem = climberSubsystem;
-    addRequirements(m_climberSubsystem);
+  /** Creates a new SpinUpShooter. */
+  public SpinUpShooter(ShooterSubsystem shooterSubsystem) {
+    m_shooterSubsystem = shooterSubsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-
   public void initialize() {
-    m_climberSubsystem.setLeftClimberPosition(ClimberConstants.kMaxRetractDistance);
-    m_climberSubsystem.setRightClimberPosition(ClimberConstants.kMaxRetractDistance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_shooterSubsystem.setSpeedTop(ShooterConstants.kTopMotorSpinUpSpeed);
+    m_shooterSubsystem.setSpeedMiddle(ShooterConstants.kMiddleMotorSpinUpSpeed);
+    m_shooterSubsystem.setSpeedBottom(-500);
   }
 
   // Called once the command ends or is interrupted.

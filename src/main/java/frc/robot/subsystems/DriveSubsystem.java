@@ -148,6 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Pose Estimator Pose X", getPose().getX());
     SmartDashboard.putNumber("Pose Estimator Pose Y", getPose().getY());
     SmartDashboard.putNumber("Pose Estimator Pose R", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Distance To Alliance Hub", 0);
     // SmartDashboard.putData("Field pose", m_field);
     m_field.setRobotPose(getPose());
     // SmartDashboard.putNumber("odo Pose X", m_odometry.getPoseMeters().getX());

@@ -45,8 +45,8 @@ public final class Constants {
 	public static final class DriveConstants {
 		// Driving Parameters - Note that these are not the maximum capable speeds of
 		// the robot, rather the allowed maximum speeds
-		public static final double kMaxSpeedMetersPerSecond = 4.8 / 2; // old is 4.8
-		public static final double kMaxAngularSpeed = 2 * Math.PI / 2; // radians per second // old is 2 * Math.PI
+		public static final double kMaxSpeedMetersPerSecond = 4.8; // old is 4.8
+		public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second // old is 2 * Math.PI
 
 		// Chassis configuration
 		// public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -84,7 +84,7 @@ public final class Constants {
 		// PID
 		public static final double kRotationalPIDkP = 0.03125;
 		public static final double kRotationalPIDkI = 1e-5;
-		public static final double kRotationalPIDkD = 0;
+		public static final double kRotationalPIDkD = 0.001;
 		public static final double kRotationalDeadband = 0.01;
 	}
 
@@ -93,22 +93,22 @@ public final class Constants {
 		public static final int kIntakeMotorCanID = 59;
 
 		public static final double kPivotMotorPositionConversionFactor = 360.0 / 50.0;
-		public static final double kPivotMotorVelocityConversionFactor = 360.0;
+		public static final double kPivotMotorVelocityConversionFactor = 360.0 / 50.0;
 		public static final double kIntakeMotorPositionConversionFactor = 1.0;
 		public static final double kIntakeMotorVelocityConversionFactor = 1.0;
 
-		public static final double kExtendPivotAngle = 160;
-		public static final double kRetractedPivotAngle = 0;
+		public static final double kIntakeExtendedPosition = 160;
+		public static final double kIntakeRetractedPosition = 0;
 
 		public static final double kMaxPivotDutyCycle = 0.25;
 
-		public static final double kCruiseVel0 = 500;
-		public static final double kMaxAccel0 = 250;
-		public static final double kAllowedProfileError0 = kCruiseVel0 * .1;
+		public static final double kCruiseVel0 = 1000;
+		public static final double kMaxAccel0 = 500;
+		public static final double kAllowedProfileError0 = kCruiseVel0 * 0.1;
 
 		public static final double kCruiseVel1 = 10;
 		public static final double kMaxAccel1 = 50;
-		public static final double kAllowedProfileError1 = kCruiseVel1 * .1;
+		public static final double kAllowedProfileError1 = kCruiseVel1 * 0.1;
 
 		public static final double kPivotS = 0;
 		public static final double kPivotV = 5.27;
@@ -116,7 +116,7 @@ public final class Constants {
 		public static final double kPivotCos = 3; // old = 0.15
 		public static final double kPivotCosRatio = 1.0; // Either 50 or 1/50
 
-		public static final double kIntakeFullSpeed = 4000; // in rpm
+		public static final double kIntakeFullSpeed = 3000; // in rpm
 	}
 
 	public static final class ClimberConstants {
@@ -128,11 +128,11 @@ public final class Constants {
 		public static final double kMotorI = 0.0;
 
 		public static final double kMaxExtendDistance = 24.0;
-		public static final double kMaxRetractDistance = 1.0;
+		public static final double kMaxRetractDistance = 1;
 		public static final double kHomeDutyCycle = -0.2; // keep this value small (0 is no power, 1 is full power)
 
-		public static final double kMaxExtendVelocity = 0.1;
-		public static final double kMaxRetractVelocity = 0.1;
+		public static final double kMaxExtendVelocity = 0.15;
+		public static final double kMaxRetractVelocity = 0.15;
 		public static final double kMaxExtendAcceleration = 0.1;
 		public static final double kMaxRetractAcceleration = 0.1;
 
@@ -157,6 +157,24 @@ public final class Constants {
 				+ (-1657.4326171875 / -3.0)) / 3.0;
 
 		public static final Map<Double, ShooterDatum> kShooterDistanceToRPMsMap = new HashMap<>();
+
+		public static final double kTopMotorP = 0.0004;
+		public static final double kTopMotorD = 0.02;
+		public static final double kTopMotorFF = 0.00015;
+
+		public static final double kMiddleMotorP = 0.001;
+		public static final double kMiddleMotorD = 0.001;
+		public static final double kMiddleMotorFF = 0.0002;
+
+		public static final double kBottomMotorP = 0.00; // 0.01
+		public static final double kBottomMotorI = 0.00000; // 0.00000
+		public static final double kBottomMotorD = 0.00; // 0.05
+		public static final double kBottomMotorFF = 0.0000; // 0.0001
+		public static final double kBottomMotorSFF = 0; // 7
+
+		public static final double kTopMotorSpinUpSpeed = 2750 + (2570 * 0.3);
+		public static final double kMiddleMotorSpinUpSpeed = 1250 + (1250 * 0.1);
+		public static final double kBottomMotorSpinUpSpeed = 1250;
 
 		public static void LoadShooterToRpmMap() {
 			// put all tested values for rpms's
@@ -195,9 +213,9 @@ public final class Constants {
 		public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
 		public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-		public static final double kPTransController = 4; // 4 is ok but not good
+		public static final double kPTransController = 0.25; // 4 is ok but not good
 		// public static final double kPYController = 1;
-		public static final double kPThetaController = 0.00625;
+		public static final double kPThetaController = 0.625;
 
 		// Constraint for the motion profiled robot angle controller
 		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
@@ -212,14 +230,14 @@ public final class Constants {
 	public static final class CameraConstants {
 		public static final Transform3d kRobotToFrontCam = new Transform3d( // seems to be incorrect in sign or
 																			// something similar
-				new Translation3d(Units.inchesToMeters(11.090), Units.inchesToMeters(-8.75),
+				new Translation3d(Units.inchesToMeters(11.090), Units.inchesToMeters(8.75),
 						Units.inchesToMeters(19.7204)),
-				new Rotation3d(0, 32, 0));
+				new Rotation3d(0, Units.degreesToRadians(32), 0));
 		public static final Transform3d kRobotToBackCam = new Transform3d( // seems to be more correct than the forward
 																			// camera
-				new Translation3d(Units.inchesToMeters(-11.0697), Units.inchesToMeters(11.125),
+				new Translation3d(Units.inchesToMeters(-11.0697), Units.inchesToMeters(-11.125),
 						Units.inchesToMeters(17.467)),
-				new Rotation3d(0, 160, 0));
+				new Rotation3d(0, Units.degreesToRadians(160), 0));
 		public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1); // old: 4, 4, 8
 		public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 	}

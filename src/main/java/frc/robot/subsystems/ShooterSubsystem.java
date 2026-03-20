@@ -23,6 +23,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Configs.ShooterSubsystemConfigs;
 import frc.robot.Constants.NeoMotorConstants;
 // import frc.robot.Constants.NeoVortexConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -77,7 +78,8 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_topConfig.smartCurrentLimit(40);
 		m_topConfig.inverted(true);
 		m_topConfig.closedLoop.feedForward.kV(m_topMotorFF);
-		m_topMotor.configure(m_topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		m_topMotor.configure(ShooterSubsystemConfigs.topMotorConfig, ResetMode.kResetSafeParameters,
+				PersistMode.kPersistParameters);
 		// Configuring middle motor
 
 		m_middleMotorP = 0.001;
@@ -97,28 +99,11 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_middleConfig.inverted(false);
 		m_middleConfig.smartCurrentLimit(40);
 		m_middleConfig.closedLoop.feedForward.kV(m_middleMotorFF);
-		m_middleMotor.configure(m_middleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		m_middleMotor.configure(ShooterSubsystemConfigs.middleMotorConfig, ResetMode.kResetSafeParameters,
+				PersistMode.kPersistParameters);
 
-		m_bottomMotorP = 0.005;
-		m_bottomMotorD = 0.09;
-		m_bottomMotorFF = 0.1; // needs to be bigger
-		m_bottomMotorSFF = 0.0;
-
-		// Configuring bottom motor
-		m_bottomConfig = new SparkFlexConfig();
-		// m_bottomConfig = new SparkMaxConfig();
-		// m_bottomConfig.encoder // change these values
-		// .velocityConversionFactor((1.0 / 9.0));
-		m_bottomConfig.encoder.velocityConversionFactor(1.0 / 3.0);
-		m_bottomConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(m_bottomMotorP, ClosedLoopSlot.kSlot0) // change
-				.d(m_bottomMotorD, ClosedLoopSlot.kSlot0)
-				.outputRange(-1, 1);
-		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
-		m_bottomConfig.inverted(true);
-		m_bottomConfig.closedLoop.feedForward.kV(m_bottomMotorFF).kS(m_bottomMotorSFF);
-		m_bottomConfig.smartCurrentLimit(40);
-		m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		m_bottomMotor.configure(ShooterSubsystemConfigs.bottomMotorConfig, ResetMode.kResetSafeParameters,
+				PersistMode.kPersistParameters);
 
 		m_closedLoopControllerTop = m_topMotor.getClosedLoopController();
 		m_closedLoopControllerMiddle = m_middleMotor.getClosedLoopController();
@@ -231,6 +216,18 @@ public class ShooterSubsystem extends SubsystemBase {
 		return m_bottomEncoder.getVelocity();
 	}
 
+	public double getTopMotorSpeedTarget() {
+		return m_topSpeed;
+	}
+
+	public double getMiddleMotorSpeedTarget() {
+		return m_middleSpeed;
+	}
+
+	public double getBottomMotorSpeedTarget() {
+		return m_bottomSpeed;
+	}
+
 	public void SetShooterTargetDistance(double targetDistance) {
 		double lowKey = 0;
 		double highKey = 0;
@@ -298,7 +295,8 @@ public class ShooterSubsystem extends SubsystemBase {
 		}
 		if (m_bottomMotorP != m_bottomMotorPOld || m_bottomMotorD != m_bottomMotorDOld
 				|| m_bottomMotorFF != m_bottomMotorFFOld || m_bottomMotorSFF != m_bottomMotorSFFOld) {
-			m_bottomConfig.closedLoop.p(m_bottomMotorP).d(m_bottomMotorD).feedForward.kV(m_bottomMotorFF).kS(m_bottomMotorSFF);
+			m_bottomConfig.closedLoop.p(m_bottomMotorP).d(m_bottomMotorD).feedForward.kV(m_bottomMotorFF)
+					.kS(m_bottomMotorSFF);
 			m_bottomMotor.configure(m_bottomConfig, ResetMode.kResetSafeParameters,
 					PersistMode.kPersistParameters);
 			m_bottomMotorPOld = m_bottomMotorP;

@@ -33,8 +33,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   private final PhotonPoseEstimator m_photonPoseEstimatorBack;
   private EstimateConsumer m_estimateConsumer;
 
-  private Pose2d m_estimatedPose = new Pose2d();
-  private Matrix<N3, N1> curStdDevs;
+  private Matrix<N3, N1> curStdDevsFront;
+  private Matrix<N3, N1> curStdDevsBack;
 
   public PhotonVisionSubsystem(boolean isHome, EstimateConsumer estimateConsumer) {
     m_photonPoseEstimatorFront = new PhotonPoseEstimator(FieldConstants.LoadLayout(isHome),
@@ -61,15 +61,15 @@ public class PhotonVisionSubsystem extends SubsystemBase {
    * @param estimatedPose The estimated pose to guess standard deviations for.
    * @param targets       All targets in this camera frame
    */
-  private void updateEstimationStdDevs(
+  private void updateEstimationStdDevsFront(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
     if (estimatedPose.isEmpty()) {
       // No pose input. Default to single-tag std devs
-      curStdDevs = Constants.CameraConstants.kSingleTagStdDevs;
+      curStdDevsFront = Constants.CameraConstants.kSingleTagStdDevs;
 
     } else {
       // Pose present. Start running Heuristic
-      var estStdDevs = Constants.CameraConstants.kSingleTagStdDevs;
+      var estStdDevsFront = Constants.CameraConstants.kSingleTagStdDevs;
       int numTags = 0;
       double avgDist = 0;
 
@@ -89,19 +89,73 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
       if (numTags == 0) {
         // No tags visible. Default to single-tag std devs
-        curStdDevs = Constants.CameraConstants.kSingleTagStdDevs;
+        curStdDevsFront = Constants.CameraConstants.kSingleTagStdDevs;
       } else {
         // One or more tags visible, run the full heuristic.
         avgDist /= numTags;
         // Decrease std devs if multiple targets are visible
         if (numTags > 1)
-          estStdDevs = Constants.CameraConstants.kMultiTagStdDevs;
+          estStdDevsFront = Constants.CameraConstants.kMultiTagStdDevs;
         // Increase std devs based on (average) distance
         if (numTags == 1 && avgDist > 4)
-          estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+          estStdDevsFront = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
         else
-          estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
-        curStdDevs = estStdDevs;
+          estStdDevsFront = estStdDevsFront.times(1 + (avgDist * avgDist / 30));
+        curStdDevsFront = estStdDevsFront;
+      }
+    }
+  }
+
+  /**
+   * Calculates new standard deviations This algorithm is a heuristic that creates
+   * dynamic standard
+   * deviations based on number of tags, estimation strategy, and distance from
+   * the tags.
+   *
+   * @param estimatedPose The estimated pose to guess standard deviations for.
+   * @param targets       All targets in this camera frame
+   */
+  private void updateEstimationStdDevsBack(
+      Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+    if (estimatedPose.isEmpty()) {
+      // No pose input. Default to single-tag std devs
+      curStdDevsBack = Constants.CameraConstants.kSingleTagStdDevs;
+
+    } else {
+      // Pose present. Start running Heuristic
+      var estStdDevsBack = Constants.CameraConstants.kSingleTagStdDevs;
+      int numTags = 0;
+      double avgDist = 0;
+
+      // Precalculation - see how many tags we found, and calculate an
+      // average-distance metric
+      for (var tgt : targets) {
+        var tagPose = m_photonPoseEstimatorBack.getFieldTags().getTagPose(tgt.getFiducialId());
+        if (tagPose.isEmpty())
+          continue;
+        numTags++;
+        avgDist += tagPose
+            .get()
+            .toPose2d()
+            .getTranslation()
+            .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+      }
+
+      if (numTags == 0) {
+        // No tags visible. Default to single-tag std devs
+        curStdDevsBack = Constants.CameraConstants.kSingleTagStdDevs;
+      } else {
+        // One or more tags visible, run the full heuristic.
+        avgDist /= numTags;
+        // Decrease std devs if multiple targets are visible
+        if (numTags > 1)
+          estStdDevsBack = Constants.CameraConstants.kMultiTagStdDevs;
+        // Increase std devs based on (average) distance
+        if (numTags == 1 && avgDist > 4)
+          estStdDevsBack = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        else
+          estStdDevsBack = estStdDevsBack.times(1 + (avgDist * avgDist / 30));
+        curStdDevsBack = estStdDevsBack;
       }
     }
   }
@@ -113,8 +167,12 @@ public class PhotonVisionSubsystem extends SubsystemBase {
    * SwerveDrivePoseEstimator}. This should
    * only be used when there are targets visible.
    */
-  public Matrix<N3, N1> getEstimationStdDevs() {
-    return curStdDevs;
+  public Matrix<N3, N1> getEstimationStdDevsFront() {
+    return curStdDevsFront;
+  }
+
+  public Matrix<N3, N1> getEstimationStdDevsBack() {
+    return curStdDevsBack;
   }
 
   public PhotonCamera getTopFrontCamera() {
@@ -132,13 +190,13 @@ public class PhotonVisionSubsystem extends SubsystemBase {
       if (visionEstimate.isEmpty()) {
         visionEstimate = m_photonPoseEstimatorFront.estimateLowestAmbiguityPose(result);
       }
-      updateEstimationStdDevs(visionEstimate, result.getTargets());
+      updateEstimationStdDevsFront(visionEstimate, result.getTargets());
       // estimator.addVisionMeasurement(m_photonPoseEstimator.estimateCoprocMultiTagPose(result).get().estimatedPose.toPose2d(),
       // Timer.getFPGATimestamp());
       visionEstimate.ifPresent(
           est -> {
             // Change our trust in the measurement based on the tags we can see
-            var estStdDevs = getEstimationStdDevs();
+            var estStdDevs = getEstimationStdDevsFront();
 
             m_estimateConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           });
@@ -150,13 +208,13 @@ public class PhotonVisionSubsystem extends SubsystemBase {
       if (visionEstimate.isEmpty()) {
         visionEstimate = m_photonPoseEstimatorBack.estimateLowestAmbiguityPose(result);
       }
-      updateEstimationStdDevs(visionEstimate, result.getTargets());
+      updateEstimationStdDevsBack(visionEstimate, result.getTargets());
       // estimator.addVisionMeasurement(m_photonPoseEstimator.estimateCoprocMultiTagPose(result).get().estimatedPose.toPose2d(),
       // Timer.getFPGATimestamp());
       visionEstimate.ifPresent(
           est -> {
             // Change our trust in the measurement based on the tags we can see
-            var estStdDevs = getEstimationStdDevs();
+            var estStdDevs = getEstimationStdDevsBack();
 
             m_estimateConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           });
