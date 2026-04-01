@@ -122,6 +122,11 @@ public final class Configs {
 					.p(0.0125)
 					.outputRange(-1, 1)
 					.d(0.05).feedForward.kS(8).kV(0.05);
+			intakeMotorConfig.encoder
+					.uvwMeasurementPeriod(8)
+					.quadratureAverageDepth(2)
+					.quadratureMeasurementPeriod(8);
+
 			// .feedForward.kV(drivingVelocityFeedForward);
 		}
 	}
@@ -193,6 +198,10 @@ public final class Configs {
 			topMotorConfig.smartCurrentLimit(40);
 			topMotorConfig.inverted(true);
 			topMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kTopMotorFF);
+			topMotorConfig.encoder
+					.uvwMeasurementPeriod(8)
+					.quadratureAverageDepth(2)
+					.quadratureMeasurementPeriod(8);
 
 			// m_middleConfig = new SparkMaxConfig();
 			// m_middleConfig.encoder // change these values
@@ -204,8 +213,12 @@ public final class Configs {
 					.outputRange(-1, 1);
 			// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
 			middleMotorConfig.inverted(false);
-			middleMotorConfig.smartCurrentLimit(40);
+			middleMotorConfig.smartCurrentLimit(100);
 			middleMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kMiddleMotorFF);
+			middleMotorConfig.encoder
+					.uvwMeasurementPeriod(8)
+					.quadratureAverageDepth(2)
+					.quadratureMeasurementPeriod(8);
 
 			// m_bottomConfig = new SparkMaxConfig();
 			// m_bottomConfig.encoder // change these values
@@ -220,7 +233,11 @@ public final class Configs {
 			bottomMotorConfig.inverted(true);
 			bottomMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kBottomMotorFF)
 					.kS(ShooterConstants.kBottomMotorSFF);
-			bottomMotorConfig.smartCurrentLimit(40);
+			bottomMotorConfig.smartCurrentLimit(80);
+			bottomMotorConfig.encoder
+					.uvwMeasurementPeriod(8)
+					.quadratureAverageDepth(2)
+					.quadratureMeasurementPeriod(8);
 		}
 	}
 }

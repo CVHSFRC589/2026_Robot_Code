@@ -55,6 +55,7 @@ import frc.robot.commands.Intake.RunIntakeOG;
 import frc.robot.commands.Intake.SetPivotDegree;
 import frc.robot.commands.Intake.SetSpeedIntake;
 import frc.robot.commands.Shooter.FeedFuelAtTarget;
+import frc.robot.commands.Shooter.FeedShooter;
 import frc.robot.commands.Shooter.ReverseKickupMotor;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.ShootWithVoltage;
@@ -146,7 +147,7 @@ public class RobotContainer {
 				new PathPlannerAuto("Left Shoot - Preload Shoot - Out of Way"));
 
 		// autoChooser.addOption("Right Start - Preload Shoot - Right Outside
-		// Climb",+"));
+		// Climb");
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		m_alliance = DriverStation.getAlliance().get();
 
@@ -156,7 +157,7 @@ public class RobotContainer {
 				// Turning is controlled by the X axis of the right stick.
 				new RunCommand(
 						() -> m_robotDrive.drive(
-								// MathUtil.appl+yDeadband(m_driverController.getHID().getLeftY(),
+								// MathUtil.applyDeadband(m_driverController.getHID().getLeftY(),
 								// OIConstants.kDriveDeadband),
 								getDriverControllerProcessedLeftStickY(),
 								// MathUtil.applyDeadband(m_driverController.getHID().getLeftX(),
@@ -165,10 +166,10 @@ public class RobotContainer {
 								-getDriverControllerProcessedRightStickX(),
 								true),
 						m_robotDrive));
-		// m_shooterSubsystem.setDefaultCommand(
-		// new InstantCommand(() -> {
-		// m_shooterSubsystem.setSpeedBottom(-500);
-		// }, m_shooterSubsystem));
+		m_shooterSubsystem.setDefaultCommand(
+				new InstantCommand(() -> {
+					m_shooterSubsystem.setSpeedBottom(-250);
+				}, m_shooterSubsystem));
 	}
 
 	/**
@@ -316,17 +317,16 @@ public class RobotContainer {
 				// m_shooterSubsystem));
 				.whileTrue(new Shoot(m_shooterSubsystem));
 		m_driverController.leftTrigger()
-				.whileTrue(new Shoot(
+				.whileTrue(new PointToPose(m_robotDrive,
 						() -> {
-							return 0;
+							return isRedAlliance() ? FieldConstants.kRedHubPose : FieldConstants.kBlueHubPose;
 						},
 						() -> {
-							return 0;
+							return getDriverControllerProcessedLeftStickY() / 2;
 						},
 						() -> {
-							return 0;
-						},
-						m_shooterSubsystem));
+							return getDriverControllerProcessedLeftStickX() / 2;
+						}));
 		m_driverController.leftBumper()
 				.whileTrue(new ExtendClimber(m_climberSubsystem));
 		m_driverController.rightBumper()
@@ -399,6 +399,7 @@ public class RobotContainer {
 		// m_operatorController.povUp().whileTrue(
 		// new SequentialCommandGroup(new RetractIntakePID(m_intakeSubsystem),
 		// new SetSpeedIntake(m_intakeSubsystem, 0)));
+		m_operatorController.b().whileTrue(new FeedShooter(m_shooterSubsystem));
 
 	}
 
@@ -410,22 +411,22 @@ public class RobotContainer {
 		// start -> bottom motor speed += 25
 		// back -> bottom motor speed -= 25
 		m_testController.a().onTrue(new InstantCommand(() -> {
-			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getMiddleMotorSpeed() - 25);
+			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getMiddleMotorSpeedTarget() - 100);
 		}, m_shooterSubsystem));
 		m_testController.b().onTrue(new InstantCommand(() -> {
-			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getMiddleMotorSpeed() + 25);
+			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getMiddleMotorSpeedTarget() + 100);
 		}, m_shooterSubsystem));
 		m_testController.y().onTrue(new InstantCommand(() -> {
-			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getTopMotorSpeed() + 25);
+			m_shooterSubsystem.setSpeedTop(m_shooterSubsystem.getTopMotorSpeedTarget() + 100);
 		}, m_shooterSubsystem));
 		m_testController.x().onTrue(new InstantCommand(() -> {
-			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getTopMotorSpeed() - 25);
+			m_shooterSubsystem.setSpeedTop(m_shooterSubsystem.getTopMotorSpeedTarget() - 100);
 		}, m_shooterSubsystem));
 		m_testController.start().onTrue(new InstantCommand(() -> {
-			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getBottomMotorSpeed() + 25);
+			m_shooterSubsystem.setSpeedBottom(m_shooterSubsystem.getBottomMotorSpeedTarget() + 100);
 		}, m_shooterSubsystem));
 		m_testController.back().onTrue(new InstantCommand(() -> {
-			m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getBottomMotorSpeed() - 25);
+			m_shooterSubsystem.setSpeedBottom(m_shooterSubsystem.getBottomMotorSpeedTarget() - 100);
 		}, m_shooterSubsystem));
 	}
 
@@ -443,66 +444,6 @@ public class RobotContainer {
 
 	public boolean isRedAlliance() {
 		return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
-	}
-
-	static public boolean isHubActive() {
-		Optional<Alliance> alliance = DriverStation.getAlliance();
-		// If we have no alliance, we cannot be enabled, therefore no hub.
-		if (alliance.isEmpty()) {
-			return false;
-		}
-		// Hub is always enabled in autonomous.
-		if (DriverStation.isAutonomousEnabled()) {
-			return true;
-		}
-		// At this point, if we're not teleop enabled, there is no hub.
-		if (!DriverStation.isTeleopEnabled()) {
-			return false;
-		}
-
-		// We're teleop enabled, compute.
-		double matchTime = DriverStation.getMatchTime();
-		String gameData = DriverStation.getGameSpecificMessage();
-		// If we have no game data, we cannot compute, assume hub is active, as its
-		// likely early in teleop.
-		if (gameData.isEmpty()) {
-			return true;
-		}
-		boolean redInactiveFirst = false;
-		switch (gameData.charAt(0)) {
-			case 'R' -> redInactiveFirst = true;
-			case 'B' -> redInactiveFirst = false;
-			default -> {
-				// If we have invalid game data, assume hub is active.
-				return true;
-			}
-		}
-
-		// Shift was is active for blue if red won auto, or red if blue won auto.
-		boolean shift1Active = switch (alliance.get()) {
-			case Red -> !redInactiveFirst;
-			case Blue -> redInactiveFirst;
-		};
-
-		if (matchTime > 130) {
-			// Transition shift, hub is active.
-			return true;
-		} else if (matchTime > 105) {
-			// Shift 1
-			return shift1Active;
-		} else if (matchTime > 80) {
-			// Shift 2
-			return !shift1Active;
-		} else if (matchTime > 55) {
-			// Shift 3
-			return shift1Active;
-		} else if (matchTime > 30) {
-			// Shift 4
-			return !shift1Active;
-		} else {
-			// End game, hub always active.
-			return true;
-		}
 	}
 
 	/**

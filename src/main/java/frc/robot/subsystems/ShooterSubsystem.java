@@ -47,6 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
 	double m_topMotorPOld, m_topMotorDOld, m_topMotorFFOld;
 	double m_middleMotorPOld, m_middleMotorDOld, m_middleMotorFFOld;
 	double m_bottomMotorPOld, m_bottomMotorDOld, m_bottomMotorFFOld, m_bottomMotorSFFOld;
+	boolean m_topReady, m_middleReady, m_bottomReady,m_shooterReady;
 	// SparkMaxConfig m_config;
 
 	/** Creates a new ShooterSubsystem. */
@@ -54,51 +55,9 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_topMotor = new SparkFlex(ShooterConstants.kTopMotorCanID, MotorType.kBrushless);
 		m_middleMotor = new SparkFlex(ShooterConstants.kMiddleMotorCanID, MotorType.kBrushless);
 		m_bottomMotor = new SparkFlex(ShooterConstants.kBottomMotorCanID, MotorType.kBrushless);
-		// m_topMotor = new SparkMax(ShooterConstants.kTopMotorCanID,
-		// MotorType.kBrushless);
-		// m_middleMotor = new SparkMax(ShooterConstants.kMiddleMotorCanID,
-		// MotorType.kBrushless);
-		// m_bottomMotor = new SparkMax(ShooterConstants.kBottomMotorCanID,
-		// MotorType.kBrushless);
-
-		m_topMotorP = 0.0004;
-		m_topMotorD = 0.02;
-		m_topMotorFF = 0.00015;
-
-		// Configuring top motor
-		m_topConfig = new SparkFlexConfig();
-		// m_topConfig.encoder // change these values
-		// .velocityConversionFactor((1.0 / 9.0));
-		m_topConfig.encoder.velocityConversionFactor(1.0);
-		m_topConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(m_topMotorP, ClosedLoopSlot.kSlot0) // change
-				.d(m_topMotorD, ClosedLoopSlot.kSlot0)
-				.outputRange(-1, 1);
-		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
-		m_topConfig.smartCurrentLimit(40);
-		m_topConfig.inverted(true);
-		m_topConfig.closedLoop.feedForward.kV(m_topMotorFF);
 		m_topMotor.configure(ShooterSubsystemConfigs.topMotorConfig, ResetMode.kResetSafeParameters,
 				PersistMode.kPersistParameters);
-		// Configuring middle motor
 
-		m_middleMotorP = 0.001;
-		m_middleMotorD = 0.001;
-		m_middleMotorFF = 0.0002;
-
-		m_middleConfig = new SparkFlexConfig();
-		// m_middleConfig = new SparkMaxConfig();
-		// m_middleConfig.encoder // change these values
-		// .velocityConversionFactor((1.0 / 9.0));
-		m_middleConfig.encoder.velocityConversionFactor(1.0);
-		m_middleConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-				.p(m_middleMotorP, ClosedLoopSlot.kSlot0) // change
-				.d(m_middleMotorD, ClosedLoopSlot.kSlot0)
-				.outputRange(-1, 1);
-		// .feedForward.kV(1 / NeoVortexConstants.kMotorkV);
-		m_middleConfig.inverted(false);
-		m_middleConfig.smartCurrentLimit(40);
-		m_middleConfig.closedLoop.feedForward.kV(m_middleMotorFF);
 		m_middleMotor.configure(ShooterSubsystemConfigs.middleMotorConfig, ResetMode.kResetSafeParameters,
 				PersistMode.kPersistParameters);
 
@@ -111,7 +70,9 @@ public class ShooterSubsystem extends SubsystemBase {
 		m_topEncoder = m_topMotor.getEncoder();
 		m_middleEncoder = m_middleMotor.getEncoder();
 		m_bottomEncoder = m_bottomMotor.getEncoder();
-
+		m_topReady = false;
+		m_middleReady = false;
+		m_bottomReady = false;
 		SmartDashboard.putNumber("Bottom Motor P", m_bottomMotorP);
 		SmartDashboard.putNumber("Bottom Motor D", m_bottomMotorD);
 		SmartDashboard.putNumber("Bottom Motor FF", m_bottomMotorFF);
@@ -260,9 +221,31 @@ public class ShooterSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		if(getTopMotorSpeed() <= getTopMotorSpeedTarget() + 100 && getTopMotorSpeed() >= getTopMotorSpeedTarget()-100){
+			m_topReady = true;
+		}
+		if(getMiddleMotorSpeed() <= getMiddleMotorSpeedTarget() + 100 && getMiddleMotorSpeed() >= getMiddleMotorSpeedTarget()-100){
+			m_middleReady = true;
+		}
+		if(getBottomMotorSpeed() <= getBottomMotorSpeedTarget() + 100 && getBottomMotorSpeed() >= getBottomMotorSpeedTarget()-100){
+			m_bottomReady = true;
+		}
+		if(m_topReady && m_middleReady && m_bottomReady){
+			m_shooterReady = true;
+		}
+		SmartDashboard.putBoolean("Is Top Motor Spun Up", m_topReady);
+		SmartDashboard.putBoolean("Is Middle Motor Spun Up", m_middleReady);
+		SmartDashboard.putBoolean("Is Bottom Motor Spun Up", m_bottomReady);
+		SmartDashboard.putBoolean("Is Shooter Ready", m_shooterReady);
 		SmartDashboard.putNumber("Top Motor Speed", getTopMotorSpeed());
+		SmartDashboard.putNumber("Top Motor Speed Target", getTopMotorSpeedTarget());
+		SmartDashboard.putNumber("Top Motor Temperature", m_topMotor.getMotorTemperature());
 		SmartDashboard.putNumber("Middle Motor Speed", getMiddleMotorSpeed());
+		SmartDashboard.putNumber("Middle Motor Speed Target", getMiddleMotorSpeedTarget());
+		SmartDashboard.putNumber("Middle Motor Temperature", m_middleMotor.getMotorTemperature());
 		SmartDashboard.putNumber("Bottom Motor Speed", getBottomMotorSpeed());
+		SmartDashboard.putNumber("Bottom Motor Speed Target", getBottomMotorSpeedTarget());
+		SmartDashboard.putNumber("Bottom Motor Temperature", m_bottomMotor.getMotorTemperature());
 		m_bottomMotorP = SmartDashboard.getNumber("Bottom Motor P", m_bottomMotorPOld);
 		m_bottomMotorD = SmartDashboard.getNumber("Bottom Motor D", m_bottomMotorDOld);
 		m_bottomMotorFF = SmartDashboard.getNumber("Bottom Motor FF", m_bottomMotorFFOld);

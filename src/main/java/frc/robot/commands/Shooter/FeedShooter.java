@@ -9,12 +9,14 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SpinUpShooter extends Command {
+public class FeedShooter extends Command {
   ShooterSubsystem m_shooterSubsystem;
+  int m_iterations;
 
-  /** Creates a new SpinUpShooter. */
-  public SpinUpShooter(ShooterSubsystem shooterSubsystem) {
+  /** Creates a new FeedShooter. */
+  public FeedShooter(ShooterSubsystem shooterSubsystem) {
     m_shooterSubsystem = shooterSubsystem;
+    m_iterations = 0;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_shooterSubsystem);
   }
@@ -22,14 +24,18 @@ public class SpinUpShooter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setSpeedTop(ShooterConstants.kTopMotorSpinUpSpeed);
-    m_shooterSubsystem.setSpeedMiddle(ShooterConstants.kMiddleMotorSpinUpSpeed);
-    m_shooterSubsystem.setSpeedBottom(-500);
+    m_shooterSubsystem.setSpeedBottom(ShooterConstants.kBottomMotorSpinUpSpeed);
+    // m_shooterSubsystem.setSpeedMiddle(m_shooterSubsystem.getMiddleMotorSpeedTarget());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // if (m_iterations > 25) {
+    // m_shooterSubsystem.setSpeedBottom(ShooterConstants.kBottomMotorSpinUpSpeed);
+    // } else {
+    // m_iterations++;
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +46,6 @@ public class SpinUpShooter extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

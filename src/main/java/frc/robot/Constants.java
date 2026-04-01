@@ -82,10 +82,10 @@ public final class Constants {
 		public static final int kPigeonCanID = 60;
 
 		// PID
-		public static final double kRotationalPIDkP = 0.03125;
+		public static final double kRotationalPIDkP = 0.015;
 		public static final double kRotationalPIDkI = 1e-5;
-		public static final double kRotationalPIDkD = 0.001;
-		public static final double kRotationalDeadband = 0.01;
+		public static final double kRotationalPIDkD = 0.0001;
+		public static final double kRotationalDeadband = 0.02;
 	}
 
 	public static final class IntakeConstants {
@@ -116,7 +116,7 @@ public final class Constants {
 		public static final double kPivotCos = 3; // old = 0.15
 		public static final double kPivotCosRatio = 1.0; // Either 50 or 1/50
 
-		public static final double kIntakeFullSpeed = 3000; // in rpm
+		public static final double kIntakeFullSpeed = 5000; // in rpm
 	}
 
 	public static final class ClimberConstants {
@@ -158,23 +158,23 @@ public final class Constants {
 
 		public static final Map<Double, ShooterDatum> kShooterDistanceToRPMsMap = new HashMap<>();
 
-		public static final double kTopMotorP = 0.0004;
-		public static final double kTopMotorD = 0.02;
-		public static final double kTopMotorFF = 0.00015;
+		public static final double kTopMotorP = 0.0001;
+		public static final double kTopMotorD = 0.000005;
+		public static final double kTopMotorFF = 0.002;
 
 		public static final double kMiddleMotorP = 0.001;
-		public static final double kMiddleMotorD = 0.001;
-		public static final double kMiddleMotorFF = 0.0002;
+		public static final double kMiddleMotorD = 0.00005;
+		public static final double kMiddleMotorFF = 0.001;
 
-		public static final double kBottomMotorP = 0.00; // 0.01
+		public static final double kBottomMotorP = 0.015; // 0.01
 		public static final double kBottomMotorI = 0.00000; // 0.00000
-		public static final double kBottomMotorD = 0.00; // 0.05
-		public static final double kBottomMotorFF = 0.0000; // 0.0001
-		public static final double kBottomMotorSFF = 0; // 7
+		public static final double kBottomMotorD = 0.002; // 0.01
+		public static final double kBottomMotorFF = 0.001; // 0.001
+		public static final double kBottomMotorSFF = 5; // 5
 
 		public static final double kTopMotorSpinUpSpeed = 2750 + (2570 * 0.3);
 		public static final double kMiddleMotorSpinUpSpeed = 1250 + (1250 * 0.1);
-		public static final double kBottomMotorSpinUpSpeed = 1250;
+		public static final double kBottomMotorSpinUpSpeed = 600; // 1250
 
 		public static void LoadShooterToRpmMap() {
 			// put all tested values for rpms's
