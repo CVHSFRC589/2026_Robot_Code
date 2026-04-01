@@ -37,7 +37,7 @@ public class Shoot extends Command {
 
   public Shoot(ShooterSubsystem shooterSubsystem) {
     m_topSpeed = () -> {
-      return ShooterConstants.kBottomMotorSpinUpSpeed;
+      return ShooterConstants.kTopMotorSpinUpSpeed;
     };
     m_middleSpeed = () -> {
       return ShooterConstants.kMiddleMotorSpinUpSpeed;

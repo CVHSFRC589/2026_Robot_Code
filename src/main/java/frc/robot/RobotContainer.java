@@ -168,7 +168,7 @@ public class RobotContainer {
 						m_robotDrive));
 		m_shooterSubsystem.setDefaultCommand(
 				new InstantCommand(() -> {
-					m_shooterSubsystem.setSpeedBottom(-250);
+					m_shooterSubsystem.setSpeedBottom(-150);
 				}, m_shooterSubsystem));
 	}
 
@@ -401,6 +401,10 @@ public class RobotContainer {
 		// new SetSpeedIntake(m_intakeSubsystem, 0)));
 		m_operatorController.b().whileTrue(new FeedShooter(m_shooterSubsystem));
 		m_operatorController.leftStick().onTrue(new HomeClimber(m_climberSubsystem));
+		m_operatorController.rightStick().onTrue(new InstantCommand(() -> {
+			m_climberSubsystem.m_leftClimber.resetEncoder();
+			m_climberSubsystem.m_rightClimber.resetEncoder();
+		}, m_climberSubsystem));
 
 	}
 

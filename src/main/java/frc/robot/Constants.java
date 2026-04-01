@@ -172,8 +172,8 @@ public final class Constants {
 		public static final double kBottomMotorFF = 0.001; // 0.001
 		public static final double kBottomMotorSFF = 5; // 5
 
-		public static final double kTopMotorSpinUpSpeed = 2750 + (2570 * 0.3);
-		public static final double kMiddleMotorSpinUpSpeed = 1250 + (1250 * 0.1);
+		public static final double kTopMotorSpinUpSpeed = 0;// 2750 + (2570 * 0.3);
+		public static final double kMiddleMotorSpinUpSpeed = 3000;// 1250 + (1250 * 0.1);
 		public static final double kBottomMotorSpinUpSpeed = 600; // 1250
 
 		public static void LoadShooterToRpmMap() {

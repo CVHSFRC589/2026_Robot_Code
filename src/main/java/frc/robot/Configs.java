@@ -72,7 +72,7 @@ public final class Configs {
 		static {
 			pivotMotorConfig
 					.idleMode(IdleMode.kBrake)
-					.smartCurrentLimit(30);
+					.smartCurrentLimit(80);
 
 			pivotMotorConfig.encoder
 					.positionConversionFactor(IntakeConstants.kPivotMotorPositionConversionFactor)
@@ -109,7 +109,7 @@ public final class Configs {
 
 			intakeMotorConfig
 					.idleMode(IdleMode.kCoast)
-					.smartCurrentLimit(30)
+					.smartCurrentLimit(80)
 					.inverted(true);
 
 			intakeMotorConfig.encoder
