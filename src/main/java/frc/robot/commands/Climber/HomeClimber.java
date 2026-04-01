@@ -21,8 +21,8 @@ public class HomeClimber extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_climberSubsystem.m_leftClimber.setSpeed(-ClimberConstants.kMaxRetractVelocity);
-		m_climberSubsystem.m_rightClimber.setSpeed(-ClimberConstants.kMaxRetractVelocity);
+		m_climberSubsystem.m_leftClimber.setSpeed(-ClimberConstants.kHomeDutyCycle);
+		m_climberSubsystem.m_rightClimber.setSpeed(-ClimberConstants.kHomeDutyCycle);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

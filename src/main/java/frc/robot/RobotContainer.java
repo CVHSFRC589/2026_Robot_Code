@@ -400,6 +400,7 @@ public class RobotContainer {
 		// new SequentialCommandGroup(new RetractIntakePID(m_intakeSubsystem),
 		// new SetSpeedIntake(m_intakeSubsystem, 0)));
 		m_operatorController.b().whileTrue(new FeedShooter(m_shooterSubsystem));
+		m_operatorController.leftStick().onTrue(new HomeClimber(m_climberSubsystem));
 
 	}
 
