@@ -23,21 +23,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Left Shoot Position to Left Outside Climb"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Lower Climber"
+            "name": "Shoot"
           }
         }
       ]

@@ -22,9 +22,10 @@ public class SpinUpShooter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setSpeedTop(ShooterConstants.kTopMotorSpinUpSpeed);
-    m_shooterSubsystem.setSpeedMiddle(ShooterConstants.kMiddleMotorSpinUpSpeed);
-    m_shooterSubsystem.setSpeedBottom(-500);
+    m_shooterSubsystem.setSpeedTop(ShooterConstants.kTopMotorSpinUpSpeed + m_shooterSubsystem.m_topMotorSpeedOffset);
+    m_shooterSubsystem
+        .setSpeedMiddle(ShooterConstants.kMiddleMotorSpinUpSpeed + m_shooterSubsystem.m_middleMotorSpeedOffset);
+    m_shooterSubsystem.setSpeedBottom(-250);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

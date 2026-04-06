@@ -336,12 +336,13 @@ public class RobotContainer {
 				m_robotDrive));
 		m_driverController.b().whileTrue(new Shoot(
 				() -> {
-					return 4000;
+					return 5500;
 				},
 				() -> {
 					return 5000;
 				},
 				() -> {
+
 					return 1500;
 				},
 				m_shooterSubsystem));
@@ -353,13 +354,13 @@ public class RobotContainer {
 		// SpinUpToInputTargets(m_shooterSubsystem));
 		m_operatorController.rightTrigger().whileTrue(new Shoot(
 				() -> {
+					return 5500;
+				},
+				() -> {
 					return 5000;
 				},
 				() -> {
-					return 4000;
-				},
-				() -> {
-					return -500;
+					return -250;
 				},
 				m_shooterSubsystem));
 		// m_operatorController.leftTrigger().whileTrue(new Shoot(
@@ -405,6 +406,44 @@ public class RobotContainer {
 			m_climberSubsystem.m_leftClimber.resetEncoder();
 			m_climberSubsystem.m_rightClimber.resetEncoder();
 		}, m_climberSubsystem));
+
+		m_operatorController.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.9)
+				.onTrue(
+						new InstantCommand(
+								() -> {
+									m_shooterSubsystem.m_topMotorSpeedOffset += 25;
+								}, m_shooterSubsystem));
+		m_operatorController.axisLessThan(XboxController.Axis.kLeftY.value, 0.9)
+				.onTrue(
+						new InstantCommand(
+								() -> {
+									m_shooterSubsystem.m_topMotorSpeedOffset -= 25;
+								}, m_shooterSubsystem));
+		m_operatorController.axisGreaterThan(XboxController.Axis.kRightY.value, 0.9)
+				.onTrue(
+						new InstantCommand(
+								() -> {
+									m_shooterSubsystem.m_middleMotorSpeedOffset += 25;
+								}, m_shooterSubsystem));
+		m_operatorController.axisLessThan(XboxController.Axis.kRightY.value, 0.9)
+				.onTrue(
+						new InstantCommand(
+								() -> {
+									m_shooterSubsystem.m_middleMotorSpeedOffset -= 25;
+								}, m_shooterSubsystem));
+		m_operatorController.y()
+				.onTrue(
+						new InstantCommand(
+								() -> {
+
+									m_shooterSubsystem.m_bottomMotorSpeedOffset += 25;
+								}, m_shooterSubsystem));
+		m_operatorController.x()
+				.onTrue(
+						new InstantCommand(
+								() -> {
+									m_shooterSubsystem.m_bottomMotorSpeedOffset -= 25;
+								}, m_shooterSubsystem));
 
 	}
 

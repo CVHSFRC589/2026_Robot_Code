@@ -21,22 +21,13 @@ public class HomeClimber extends Command {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_climberSubsystem.m_leftClimber.setSpeed(-ClimberConstants.kHomeDutyCycle);
-		m_climberSubsystem.m_rightClimber.setSpeed(-ClimberConstants.kHomeDutyCycle);
+		m_climberSubsystem.m_leftClimber.setSpeed(ClimberConstants.kHomeDutyCycle);
+		m_climberSubsystem.m_rightClimber.setSpeed(ClimberConstants.kHomeDutyCycle);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		if (m_climberSubsystem.m_leftClimber.isLimitSwitchTouched()) {
-			m_climberSubsystem.m_leftClimber.setSpeed(0);
-			m_climberSubsystem.m_leftClimber.resetEncoder();
-		}
-
-		if (m_climberSubsystem.m_rightClimber.isLimitSwitchTouched()) {
-			m_climberSubsystem.m_rightClimber.setSpeed(0);
-			m_climberSubsystem.m_leftClimber.resetEncoder();
-		}
 	}
 
 	// Called once the command ends or is interrupted.

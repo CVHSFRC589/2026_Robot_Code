@@ -47,7 +47,10 @@ public class ShooterSubsystem extends SubsystemBase {
 	double m_topMotorPOld, m_topMotorDOld, m_topMotorFFOld;
 	double m_middleMotorPOld, m_middleMotorDOld, m_middleMotorFFOld;
 	double m_bottomMotorPOld, m_bottomMotorDOld, m_bottomMotorFFOld, m_bottomMotorSFFOld;
-	boolean m_topReady, m_middleReady, m_bottomReady,m_shooterReady;
+	boolean m_topReady, m_middleReady, m_bottomReady, m_shooterReady;
+	public double m_topMotorSpeedOffset = 0;
+	public double m_middleMotorSpeedOffset = 0;
+	public double m_bottomMotorSpeedOffset = 0;
 	// SparkMaxConfig m_config;
 
 	/** Creates a new ShooterSubsystem. */
@@ -221,16 +224,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if(getTopMotorSpeed() <= getTopMotorSpeedTarget() + 100 && getTopMotorSpeed() >= getTopMotorSpeedTarget()-100){
+		if (getTopMotorSpeed() <= getTopMotorSpeedTarget() + 100
+				&& getTopMotorSpeed() >= getTopMotorSpeedTarget() - 100) {
 			m_topReady = true;
 		}
-		if(getMiddleMotorSpeed() <= getMiddleMotorSpeedTarget() + 100 && getMiddleMotorSpeed() >= getMiddleMotorSpeedTarget()-100){
+		if (getMiddleMotorSpeed() <= getMiddleMotorSpeedTarget() + 100
+				&& getMiddleMotorSpeed() >= getMiddleMotorSpeedTarget() - 100) {
 			m_middleReady = true;
 		}
-		if(getBottomMotorSpeed() <= getBottomMotorSpeedTarget() + 100 && getBottomMotorSpeed() >= getBottomMotorSpeedTarget()-100){
+		if (getBottomMotorSpeed() <= getBottomMotorSpeedTarget() + 100
+				&& getBottomMotorSpeed() >= getBottomMotorSpeedTarget() - 100) {
 			m_bottomReady = true;
 		}
-		if(m_topReady && m_middleReady && m_bottomReady){
+		if (m_topReady && m_middleReady && m_bottomReady) {
 			m_shooterReady = true;
 		}
 		SmartDashboard.putBoolean("Is Top Motor Spun Up", m_topReady);

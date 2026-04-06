@@ -116,7 +116,7 @@ public final class Constants {
 		public static final double kPivotCos = 3; // old = 0.15
 		public static final double kPivotCosRatio = 1.0; // Either 50 or 1/50
 
-		public static final double kIntakeFullSpeed = 5000; // in rpm
+		public static final double kIntakeFullSpeed = 4000; // in rpm
 	}
 
 	public static final class ClimberConstants {
@@ -172,8 +172,8 @@ public final class Constants {
 		public static final double kBottomMotorFF = 0.001; // 0.001
 		public static final double kBottomMotorSFF = 5; // 5
 
-		public static final double kTopMotorSpinUpSpeed = 0;// 2750 + (2570 * 0.3);
-		public static final double kMiddleMotorSpinUpSpeed = 3000;// 1250 + (1250 * 0.1);
+		public static final double kTopMotorSpinUpSpeed = 450;// 2750 + (2570 * 0.3);
+		public static final double kMiddleMotorSpinUpSpeed = 2800;// 1250 + (1250 * 0.1);
 		public static final double kBottomMotorSpinUpSpeed = 600; // 1250
 
 		public static void LoadShooterToRpmMap() {
