@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import java.lang.reflect.Field;
-
+import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -33,6 +33,7 @@ import frc.robot.Constants.AutoConstants;
 // import edu.wpi.first.wpilibj.ADIS16470_IMU;
 // import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.data.FieldPoses;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -71,6 +72,8 @@ public class DriveSubsystem extends SubsystemBase {
       getSwerveModulePositions());
 
   final SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
+      m_gyro.getRotation2d(), getSwerveModulePositions(), new Pose2d());
+  final SwerveDrivePoseEstimator m_visionPoseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
       m_gyro.getRotation2d(), getSwerveModulePositions(), new Pose2d());
 
   // PhotonCamera m_camera;
@@ -140,21 +143,36 @@ public class DriveSubsystem extends SubsystemBase {
         getSwerveModulePositions());
     m_poseEstimator.update(m_gyro.getRotation2d(), getSwerveModulePositions());
     m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
-    SmartDashboard.putNumber("Heading", getHeading());
-    SmartDashboard.putNumber("FrontLeft Swerve Angle", m_frontLeft.getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("FrontRight Swerve Angle", m_frontRight.getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("RearLeft Swerve Angle", m_rearLeft.getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("RearRight Swerve Angle", m_rearRight.getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("Pose Estimator Pose X", getPose().getX());
-    SmartDashboard.putNumber("Pose Estimator Pose Y", getPose().getY());
-    SmartDashboard.putNumber("Pose Estimator Pose R", getPose().getRotation().getDegrees());
-    SmartDashboard.putNumber("Distance To Alliance Hub", 0);
+    // SmartDashboard.putNumber("Heading", getHeading());
+    // SmartDashboard.putNumber("FrontLeft Swerve Angle",
+    // m_frontLeft.getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("FrontRight Swerve Angle",
+    // m_frontRight.getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("RearLeft Swerve Angle",
+    // m_rearLeft.getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("RearRight Swerve Angle",
+    // m_rearRight.getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("Pose Estimator Pose X", getPose().getX());
+    // SmartDashboard.putNumber("Pose Estimator Pose Y", getPose().getY());
+    // SmartDashboard.putNumber("Pose Estimator Pose R",
+    // getPose().getRotation().getDegrees());
+    // SmartDashboard.putNumber("Distance To Alliance Hub", 0);
     // SmartDashboard.putData("Field pose", m_field);
-    m_field.setRobotPose(getPose());
+    // m_field.setRobotPose(getPose());
     // SmartDashboard.putNumber("odo Pose X", m_odometry.getPoseMeters().getX());
     // SmartDashboard.putNumber("odo Pose Y", m_odometry.getPoseMeters().getY());
     // SmartDashboard.putNumber("odo Pose R",
     // m_odometry.getPoseMeters().getRotation().getDegrees());
+
+    Logger.recordOutput("Drive/Heading", getHeading());
+    Logger.recordOutput("Drive/PoseX", getPose().getX());
+    Logger.recordOutput("Drive/PoseY", getPose().getY());
+    Logger.recordOutput("Drive/PoseRotation", getPose().getRotation().getDegrees());
+    Logger.recordOutput("Drive/ModuleStates", getModuleStates());
+    Logger.recordOutput("Drive/CombinedEstimatedRobotPose", getPose());
+    Logger.recordOutput("Drive/VisionEstimatedRobotPose", m_visionPoseEstimator.getEstimatedPosition());
+    Logger.recordOutput("Drive/OdometryEstimatedRobotPose", m_odometry.getPoseMeters());
+    Logger.recordOutput("Drive/DistanceToHub", FieldPoses.getDistanceToHub(getPose()));
   }
 
   /**
@@ -307,8 +325,8 @@ public class DriveSubsystem extends SubsystemBase {
     };
   }
 
-  public void addVisionMeasurement(
-      Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
+  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
     m_poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
+    m_visionPoseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
   }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -32,14 +34,21 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Left Climber Position", m_leftClimber.getPosition());
-    SmartDashboard.putNumber("Right Climber Position", m_rightClimber.getPosition());
-    SmartDashboard.putBoolean("Left Climber at Home", m_leftClimber.isLimitSwitchTouched());
-    SmartDashboard.putBoolean("Right Climber at Home", m_rightClimber.isLimitSwitchTouched());
-    SmartDashboard.putNumber("Left Climber Speed", m_leftClimber.m_motor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Right Climber Speed", m_rightClimber.m_motor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Left Climber Current", m_leftClimber.m_motor.getOutputCurrent());
-    SmartDashboard.putNumber("Right Climber Current", m_rightClimber.m_motor.getOutputCurrent());
+    // SmartDashboard.putNumber("Left Climber Position", m_leftClimber.getPosition());
+    // SmartDashboard.putNumber("Right Climber Position", m_rightClimber.getPosition());
+    // SmartDashboard.putBoolean("Left Climber at Home", m_leftClimber.isLimitSwitchTouched());
+    // SmartDashboard.putBoolean("Right Climber at Home", m_rightClimber.isLimitSwitchTouched());
+    // SmartDashboard.putNumber("Left Climber Speed", m_leftClimber.m_motor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Right Climber Speed", m_rightClimber.m_motor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Left Climber Current", m_leftClimber.m_motor.getOutputCurrent());
+    // SmartDashboard.putNumber("Right Climber Current", m_rightClimber.m_motor.getOutputCurrent());
+
+    Logger.recordOutput("Climber/LeftPosition", m_leftClimber.getPosition());
+    Logger.recordOutput("Climber/RightPosition", m_rightClimber.getPosition());
+    Logger.recordOutput("Climber/LeftAtHome", m_leftClimber.isLimitSwitchTouched());
+    Logger.recordOutput("Climber/RightAthome", m_rightClimber.isLimitSwitchTouched());
+    Logger.recordOutput("Climber/LeftCurrent", m_leftClimber.m_motor.getOutputCurrent());
+    Logger.recordOutput("Climber/RightCurrent", m_rightClimber.m_motor.getOutputCurrent());
 
     if (m_leftClimber.isLimitSwitchTouched()) {
       m_leftClimber.resetEncoder();

@@ -22,7 +22,7 @@ public class SpinDown extends Command {
   public void initialize() {
     m_shooterSubsystem.setSpeedTop(0);
     m_shooterSubsystem.setSpeedMiddle(0);
-    m_shooterSubsystem.setSpeedBottom(0);
+    // m_shooterSubsystem.setSpeedBottom(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

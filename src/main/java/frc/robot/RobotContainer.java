@@ -168,7 +168,8 @@ public class RobotContainer {
 						m_robotDrive));
 		m_shooterSubsystem.setDefaultCommand(
 				new InstantCommand(() -> {
-					m_shooterSubsystem.setSpeedBottom(-150);
+					// m_shooterSubsystem.setSpeedBottom(-150);
+					m_shooterSubsystem.moveBottomMotor(-0.2);
 				}, m_shooterSubsystem));
 	}
 
@@ -315,7 +316,7 @@ public class RobotContainer {
 				// return SmartDashboard.getNumber("Bottom Motor Speed Target", 0);
 				// },
 				// m_shooterSubsystem));
-				.whileTrue(new Shoot(m_shooterSubsystem));
+				.whileTrue(new FeedShooter(m_shooterSubsystem));
 		m_driverController.leftTrigger()
 				.whileTrue(new PointToPose(m_robotDrive,
 						() -> {
@@ -377,7 +378,8 @@ public class RobotContainer {
 		// return 0;
 		// },
 		// m_shooterSubsystem));
-		m_operatorController.leftTrigger().whileTrue(new SpinUpShooter(m_shooterSubsystem));
+		m_operatorController.leftTrigger().whileTrue(new SpinUpShooter(m_shooterSubsystem))
+				.whileFalse(new SpinDown(m_shooterSubsystem));
 
 		// m_operatorController.a().toggleOnTrue(new
 		// SpinUpToInputTargets(m_shooterSubsystem));

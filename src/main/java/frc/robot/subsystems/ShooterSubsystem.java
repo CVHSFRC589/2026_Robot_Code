@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
-
+import org.littletonrobotics.junction.Logger;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -243,25 +243,53 @@ public class ShooterSubsystem extends SubsystemBase {
 		SmartDashboard.putBoolean("Is Middle Motor Spun Up", m_middleReady);
 		SmartDashboard.putBoolean("Is Bottom Motor Spun Up", m_bottomReady);
 		SmartDashboard.putBoolean("Is Shooter Ready", m_shooterReady);
-		SmartDashboard.putNumber("Top Motor Speed", getTopMotorSpeed());
-		SmartDashboard.putNumber("Top Motor Speed Target", getTopMotorSpeedTarget());
-		SmartDashboard.putNumber("Top Motor Temperature", m_topMotor.getMotorTemperature());
-		SmartDashboard.putNumber("Middle Motor Speed", getMiddleMotorSpeed());
-		SmartDashboard.putNumber("Middle Motor Speed Target", getMiddleMotorSpeedTarget());
-		SmartDashboard.putNumber("Middle Motor Temperature", m_middleMotor.getMotorTemperature());
-		SmartDashboard.putNumber("Bottom Motor Speed", getBottomMotorSpeed());
-		SmartDashboard.putNumber("Bottom Motor Speed Target", getBottomMotorSpeedTarget());
-		SmartDashboard.putNumber("Bottom Motor Temperature", m_bottomMotor.getMotorTemperature());
-		m_bottomMotorP = SmartDashboard.getNumber("Bottom Motor P", m_bottomMotorPOld);
-		m_bottomMotorD = SmartDashboard.getNumber("Bottom Motor D", m_bottomMotorDOld);
-		m_bottomMotorFF = SmartDashboard.getNumber("Bottom Motor FF", m_bottomMotorFFOld);
-		m_bottomMotorSFF = SmartDashboard.getNumber("Bottom Motor Static FF", m_bottomMotorSFFOld);
-		m_middleMotorP = SmartDashboard.getNumber("Middle Motor P", m_middleMotorPOld);
-		m_middleMotorD = SmartDashboard.getNumber("Middle Motor D", m_middleMotorDOld);
-		m_middleMotorFF = SmartDashboard.getNumber("Middle Motor FF", m_middleMotorFFOld);
-		m_topMotorP = SmartDashboard.getNumber("Top Motor P", m_topMotorPOld);
-		m_topMotorD = SmartDashboard.getNumber("Top Motor D", m_topMotorDOld);
-		m_topMotorFF = SmartDashboard.getNumber("Top Motor FF", m_topMotorFFOld);
+		Logger.recordOutput("Shooter/Top Motor Temperature", m_topMotor.getMotorTemperature());
+		Logger.recordOutput("Shooter/Middle Motor Temperature", m_middleMotor.getMotorTemperature());
+		Logger.recordOutput("Shooter/Bottom Motor Temperature", m_bottomMotor.getMotorTemperature());
+		// SmartDashboard.putNumber("Top Motor Speed", getTopMotorSpeed());
+		// SmartDashboard.putNumber("Top Motor Speed Target", getTopMotorSpeedTarget());
+		// SmartDashboard.putNumber("Top Motor Temperature",
+		// m_topMotor.getMotorTemperature());
+		// SmartDashboard.putNumber("Middle Motor Speed", getMiddleMotorSpeed());
+		// SmartDashboard.putNumber("Middle Motor Speed Target",
+		// getMiddleMotorSpeedTarget());
+		// SmartDashboard.putNumber("Middle Motor Temperature",
+		// m_middleMotor.getMotorTemperature());
+		// SmartDashboard.putNumber("Bottom Motor Speed", getBottomMotorSpeed());
+		// SmartDashboard.putNumber("Bottom Motor Speed Target",
+		// getBottomMotorSpeedTarget());
+		// SmartDashboard.putNumber("Bottom Motor Temperature",
+		// m_bottomMotor.getMotorTemperature());
+		// m_bottomMotorP = SmartDashboard.getNumber("Bottom Motor P",
+		// m_bottomMotorPOld);
+		// m_bottomMotorD = SmartDashboard.getNumber("Bottom Motor D",
+		// m_bottomMotorDOld);
+		// m_bottomMotorFF = SmartDashboard.getNumber("Bottom Motor FF",
+		// m_bottomMotorFFOld);
+		// m_bottomMotorSFF = SmartDashboard.getNumber("Bottom Motor Static FF",
+		// m_bottomMotorSFFOld);
+		// m_middleMotorP = SmartDashboard.getNumber("Middle Motor P",
+		// m_middleMotorPOld);
+		// m_middleMotorD = SmartDashboard.getNumber("Middle Motor D",
+		// m_middleMotorDOld);
+		// m_middleMotorFF = SmartDashboard.getNumber("Middle Motor FF",
+		// m_middleMotorFFOld);
+		// m_topMotorP = SmartDashboard.getNumber("Top Motor P", m_topMotorPOld);
+		// m_topMotorD = SmartDashboard.getNumber("Top Motor D", m_topMotorDOld);
+		// m_topMotorFF = SmartDashboard.getNumber("Top Motor FF", m_topMotorFFOld);
+		Logger.recordOutput("Shooter/IsTopMotorSpunUp", m_topReady);
+		Logger.recordOutput("Shooter/IsMiddleMotorSpunUp", m_middleReady);
+		Logger.recordOutput("Shooter/IsBottomMotorSpun Up", m_bottomReady);
+		Logger.recordOutput("Shooter/IsShooterReady", m_shooterReady);
+		Logger.recordOutput("Shooter/TopMotorSpeed", getTopMotorSpeed());
+		Logger.recordOutput("Shooter/TopMotorSpeedTarget", getTopMotorSpeedTarget());
+		Logger.recordOutput("Shooter/TopMotorTemperature", m_topMotor.getMotorTemperature());
+		Logger.recordOutput("Shooter/MiddleMotorSpeed", getMiddleMotorSpeed());
+		Logger.recordOutput("Shooter/MiddleMotorSpeedTarget", getMiddleMotorSpeedTarget());
+		Logger.recordOutput("Shooter/MiddleMotorTemperature", m_middleMotor.getMotorTemperature());
+		Logger.recordOutput("Shooter/BottomMotorSpeed", getBottomMotorSpeed());
+		Logger.recordOutput("Shooter/BottomMotorSpeed Target", getBottomMotorSpeedTarget());
+		Logger.recordOutput("Shooter/BottomMotorTemperature", m_bottomMotor.getMotorTemperature());
 
 		if (m_topMotorP != m_topMotorPOld || m_topMotorD != m_topMotorDOld ||
 				m_topMotorFF != m_topMotorFFOld) {

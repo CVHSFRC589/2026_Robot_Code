@@ -233,7 +233,9 @@ public final class Configs {
 			bottomMotorConfig.inverted(true);
 			bottomMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kBottomMotorFF)
 					.kS(ShooterConstants.kBottomMotorSFF);
-			bottomMotorConfig.smartCurrentLimit(80);
+			bottomMotorConfig.smartCurrentLimit(50); // try 60, 70, and 80; watch motor temperature and see how the
+														// higher currents affect. Right now with 50 temperature of
+														// motor is going down.
 			bottomMotorConfig.encoder
 					.uvwMeasurementPeriod(8)
 					.quadratureAverageDepth(2)

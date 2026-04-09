@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -51,14 +53,27 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake Pivot Position", m_pivotMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Set Point Position", m_pivotController.getMAXMotionSetpointPosition());
-    SmartDashboard.putBoolean("Is it at set point", m_pivotController.isAtSetpoint());
-    SmartDashboard.putBoolean("Upper limit switch pressed?", m_pivotMotorUpperSwitch.isPressed());
-    SmartDashboard.putBoolean("Lower limit switch pressed?", m_pivotMotorLowerSwitch.isPressed());
-    SmartDashboard.putBoolean("Retracted Limit Switch Hit", retractedLimitSwitchHit());
-    SmartDashboard.putBoolean("Extended Limit Switch Hit", extendedLimitSwitchHit());
-    SmartDashboard.putNumber("Intake Wheel Speed", m_intakeMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Intake Pivot Position",
+    // m_pivotMotor.getEncoder().getPosition());
+    // SmartDashboard.putNumber("Set Point Position",
+    // m_pivotController.getMAXMotionSetpointPosition());
+    // SmartDashboard.putBoolean("Is it at set point",
+    // m_pivotController.isAtSetpoint());
+    // SmartDashboard.putBoolean("Upper limit switch pressed?",
+    // m_pivotMotorUpperSwitch.isPressed());
+    // SmartDashboard.putBoolean("Lower limit switch pressed?",
+    // m_pivotMotorLowerSwitch.isPressed());
+    // SmartDashboard.putBoolean("Retracted Limit Switch Hit",
+    // retractedLimitSwitchHit());
+    // SmartDashboard.putBoolean("Extended Limit Switch Hit",
+    // extendedLimitSwitchHit());
+    // SmartDashboard.putNumber("Intake Wheel Speed",
+    // m_intakeMotor.getEncoder().getVelocity());
+
+    Logger.recordOutput("Intake/PivotPosition", m_pivotMotor.getEncoder().getPosition());
+    Logger.recordOutput("Intake/WheelSpeed", m_intakeMotor.getEncoder().getVelocity());
+    Logger.recordOutput("Intake/RetractedLimitSwitch", retractedLimitSwitchHit());
+    Logger.recordOutput("Intake/ExtendedLimitSwitch", extendedLimitSwitchHit());
 
     if (retractedLimitSwitchHit()) {
       m_pivotMotor.getEncoder().setPosition(0);

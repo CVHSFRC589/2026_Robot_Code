@@ -176,6 +176,10 @@ public final class Constants {
 		public static final double kMiddleMotorSpinUpSpeed = 2800;// 1250 + (1250 * 0.1);
 		public static final double kBottomMotorSpinUpSpeed = 600; // 1250
 
+		public static final double kTopMotorPassSpeed = 5500;
+		public static final double kMiddleMotorPassSpeed = 5000;
+		public static final double kBottomMotorSpinUPSpeed = 600;
+
 		public static void LoadShooterToRpmMap() {
 			// put all tested values for rpms's
 			// distance in meters
@@ -230,14 +234,18 @@ public final class Constants {
 	public static final class CameraConstants {
 		public static final Transform3d kRobotToFrontCam = new Transform3d( // seems to be incorrect in sign or
 																			// something similar
-				new Translation3d(Units.inchesToMeters(11.090), Units.inchesToMeters(8.75),
+				new Translation3d(
+						Units.inchesToMeters(11.090 * 3),
+						Units.inchesToMeters(11.125),
 						Units.inchesToMeters(19.7204)),
-				new Rotation3d(0, Units.degreesToRadians(32), 0));
+				new Rotation3d(0, Units.degreesToRadians(20), 0));
 		public static final Transform3d kRobotToBackCam = new Transform3d( // seems to be more correct than the forward
 																			// camera
-				new Translation3d(Units.inchesToMeters(-11.0697), Units.inchesToMeters(-11.125),
+				new Translation3d(
+						Units.inchesToMeters(-11.0697 * 2.2),
+						Units.inchesToMeters(-8.75),
 						Units.inchesToMeters(17.467)),
-				new Rotation3d(0, Units.degreesToRadians(160), 0));
+				new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(180)));
 		public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1); // old: 4, 4, 8
 		public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 	}
