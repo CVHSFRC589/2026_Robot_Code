@@ -3,53 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5710843373493972,
-        "y": 2.516048192771084
+        "x": 3.5991440798858774,
+        "y": 4.175
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4455301204819277,
-        "y": 2.647180722891566
+        "x": 2.5991440798858765,
+        "y": 4.175
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 3.3
+        "x": 1.15,
+        "y": 4.175
       },
       "prevControl": {
-        "x": 2.2500000000000675,
-        "y": 3.3
-      },
-      "nextControl": {
-        "x": 1.75,
-        "y": 3.3
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.475,
-        "y": 3.3
-      },
-      "prevControl": {
-        "x": 1.725,
-        "y": 3.3
+        "x": 2.15,
+        "y": 4.175
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Outside Climb"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0672199170124437,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -62,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "Shoot - Outside Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

@@ -21,11 +21,13 @@ public class TelemetrySubsystem extends SubsystemBase {
   private static PowerDistribution m_PDH = new PowerDistribution();
   // private CommandXboxController m_driverController, m_operatorController;
   private static List<CommandXboxController> m_controllerList = new ArrayList<CommandXboxController>();
+  private static List<Double> m_controllerRumbleValues = new ArrayList<Double>();
 
   /** Creates a new TelemetrySubsystem. */
   public TelemetrySubsystem(CommandXboxController... controllers) {
     for (var controller : controllers) {
       m_controllerList.add(controller);
+      m_controllerRumbleValues.add(0.0);
     }
   }
 
@@ -197,8 +199,18 @@ public class TelemetrySubsystem extends SubsystemBase {
   }
 
   private static void setRumbleAllControllers(double value) {
+    int i = 0;
     for (var controller : m_controllerList) {
+      m_controllerRumbleValues.set(i, value);
       controller.setRumble(RumbleType.kBothRumble, value);
+      i++;
     }
+  }
+
+  public static void SetDriverControllerRumble(double value) {
+    m_controllerList.get(0).setRumble(RumbleType.kBothRumble, value);
+    // if (m_controllerRumbleValues.get(0) != 0) {
+    // m_controllerList.get(0).setRumble(RumbleType.kBothRumble, value);
+    // }
   }
 }

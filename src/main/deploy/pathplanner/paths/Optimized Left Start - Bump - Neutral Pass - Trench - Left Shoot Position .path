@@ -128,12 +128,12 @@
     },
     {
       "anchor": {
-        "x": 2.978088445078458,
-        "y": 4.727218259629101
+        "x": 2.564051355206847,
+        "y": 4.843666191155493
       },
       "prevControl": {
-        "x": 1.7553209117480502,
-        "y": 6.142055394096113
+        "x": 1.3412838218764391,
+        "y": 6.258503325622505
       },
       "nextControl": null,
       "isLocked": true,
@@ -221,7 +221,7 @@
   "folder": "Start - Single Pass - Shoot Position",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

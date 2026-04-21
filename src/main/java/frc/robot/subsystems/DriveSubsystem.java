@@ -173,6 +173,16 @@ public class DriveSubsystem extends SubsystemBase {
     Logger.recordOutput("Drive/VisionEstimatedRobotPose", m_visionPoseEstimator.getEstimatedPosition());
     Logger.recordOutput("Drive/OdometryEstimatedRobotPose", m_odometry.getPoseMeters());
     Logger.recordOutput("Drive/DistanceToHub", FieldPoses.getDistanceToHub(getPose()));
+
+    if (FieldPoses.getDistanceToHub(getPose()) > 2.35 &&
+        FieldPoses.getDistanceToHub(getPose()) < 2.65) {
+      TelemetrySubsystem.SetDriverControllerRumble(100);
+      SmartDashboard.putBoolean("Shooting within range (rumble)", true);
+      Logger.recordOutput("Shooter/InRange", true);
+    } else {
+      SmartDashboard.putBoolean("Shooting within range (rumble)", false);
+      Logger.recordOutput("Shooter/InRange", false);
+    }
   }
 
   /**

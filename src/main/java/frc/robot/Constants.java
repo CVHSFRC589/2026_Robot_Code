@@ -97,13 +97,13 @@ public final class Constants {
 		public static final double kIntakeMotorPositionConversionFactor = 1.0;
 		public static final double kIntakeMotorVelocityConversionFactor = 1.0;
 
-		public static final double kIntakeExtendedPosition = 160;
+		public static final double kIntakeExtendedPosition = 140;
 		public static final double kIntakeRetractedPosition = 0;
 
 		public static final double kMaxPivotDutyCycle = 0.25;
 
-		public static final double kCruiseVel0 = 1000;
-		public static final double kMaxAccel0 = 500;
+		public static final double kCruiseVel0 = 1;
+		public static final double kMaxAccel0 = 5;
 		public static final double kAllowedProfileError0 = kCruiseVel0 * 0.1;
 
 		public static final double kCruiseVel1 = 10;
@@ -128,7 +128,7 @@ public final class Constants {
 		public static final double kMotorI = 0.0;
 
 		public static final double kMaxExtendDistance = 24.0;
-		public static final double kMaxRetractDistance = 1;
+		public static final double kMaxRetractDistance = 2.5; // 1
 		public static final double kHomeDutyCycle = -0.2; // keep this value small (0 is no power, 1 is full power)
 
 		public static final double kMaxExtendVelocity = 0.15;
@@ -176,9 +176,9 @@ public final class Constants {
 		public static final double kMiddleMotorSpinUpSpeed = 2800;// 1250 + (1250 * 0.1);
 		public static final double kBottomMotorSpinUpSpeed = 600; // 1250
 
-		public static final double kTopMotorPassSpeed = 5500;
-		public static final double kMiddleMotorPassSpeed = 5000;
-		public static final double kBottomMotorSpinUPSpeed = 600;
+		public static final double kTopMotorPassSpeed = 4000; // 5500
+		public static final double kMiddleMotorPassSpeed = 6500; // 5000
+		public static final double kBottomMotorPassSpeed = 1500;
 
 		public static void LoadShooterToRpmMap() {
 			// put all tested values for rpms's

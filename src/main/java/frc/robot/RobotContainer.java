@@ -40,6 +40,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.commands.PointToPose;
+import frc.robot.commands.SequentialCommands.IntakeDownSpinUpIntake;
 import frc.robot.commands.Climber.ExtendClimber;
 import frc.robot.commands.Climber.ExtendClimbersDutyCycle;
 import frc.robot.commands.Climber.HomeClimber;
@@ -47,6 +48,7 @@ import frc.robot.commands.Climber.MoveLeftClimber;
 import frc.robot.commands.Climber.MoveRightClimber;
 import frc.robot.commands.Climber.RetractClimber;
 import frc.robot.commands.Climber.RetractClimbersDutyCycle;
+import frc.robot.commands.Intake.AgitateBalls;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.ExtendIntakePID;
 import frc.robot.commands.Intake.HomeIntake;
@@ -54,13 +56,16 @@ import frc.robot.commands.Intake.RetractIntakePID;
 import frc.robot.commands.Intake.RunIntakeOG;
 import frc.robot.commands.Intake.SetPivotDegree;
 import frc.robot.commands.Intake.SetSpeedIntake;
+import frc.robot.commands.SequentialCommands.IntakeUpSpinDownIntake;
 import frc.robot.commands.Shooter.FeedFuelAtTarget;
+import frc.robot.commands.Shooter.FeedPass;
 import frc.robot.commands.Shooter.FeedShooter;
 import frc.robot.commands.Shooter.ReverseKickupMotor;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.ShootWithVoltage;
 import frc.robot.commands.Shooter.SpinDown;
 import frc.robot.commands.Shooter.SpinToDistanceTargetSpeed;
+import frc.robot.commands.Shooter.SpinUpPass;
 import frc.robot.commands.Shooter.SpinUpShooter;
 import frc.robot.commands.Shooter.SpinUpToInputTargets;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -127,6 +132,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Spin Up Shooter", new SpinUpShooter(m_shooterSubsystem));
 		NamedCommands.registerCommand("Spin Down Shooter", new SpinDown(m_shooterSubsystem));
 		NamedCommands.registerCommand("Shoot", new Shoot(m_shooterSubsystem));
+		NamedCommands.registerCommand("Feed Shooter", new FeedShooter(m_shooterSubsystem));
 
 		// climber commands
 		NamedCommands.registerCommand("Home Climber", new HomeClimber(m_climberSubsystem));
@@ -136,6 +142,11 @@ public class RobotContainer {
 		// intake commands
 		NamedCommands.registerCommand("Lower Intake", new ExtendIntakePID(m_intakeSubsystem));
 		NamedCommands.registerCommand("Raise Intake", new RetractIntakePID(m_intakeSubsystem));
+		NamedCommands.registerCommand("Spin Intake",
+				new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed));
+		NamedCommands.registerCommand("Spin Down Intake", new InstantCommand(() -> {
+			m_intakeSubsystem.m_intakeMotor.set(0);
+		}, m_intakeSubsystem));
 
 		autoChooser.addOption("Left Start - Shoot Preload - Go to Left Outside Climb - NO CLIMB",
 				new PathPlannerAuto("Left Start - Shoot Preload - Go to Left Outside Climb - NO CLIMB"));
@@ -145,6 +156,14 @@ public class RobotContainer {
 				new PathPlannerAuto("Middle Start - Left Outside Climb"));
 		autoChooser.addOption("Left Start - Preload Shoot - Out of Way",
 				new PathPlannerAuto("Left Shoot - Preload Shoot - Out of Way"));
+		autoChooser.addOption("Left Start - Trench - Neutral Pass - Trench - Shoot - Left Outside Climb",
+				new PathPlannerAuto("Left Start - Trench - Neutral Pass - Trench - Shoot - Left Outside Climb"));
+		autoChooser.addOption("Right Bump - Right Outside Climb",
+				new PathPlannerAuto("Right Bump - Right Outside Climb"));
+		autoChooser.addOption("Center Start - Straight Back - Left Outside Climb",
+				new PathPlannerAuto("Center Start - Straight Back - Left Outside Climb"));
+		autoChooser.addOption("Center Start - Straight Back - Right Outside Climb",
+				new PathPlannerAuto("Center Start - Straight Back - Right Outside Climb"));
 
 		// autoChooser.addOption("Right Start - Preload Shoot - Right Outside
 		// Climb");
@@ -210,7 +229,7 @@ public class RobotContainer {
 		new JoystickButton(m_testController.getHID(), XboxController.Button.kLeftBumper.value)
 				.whileTrue(new SpinToDistanceTargetSpeed(m_shooterSubsystem));
 		// m_testController.start().whileTrue(new RunIntake(m_intakeSubsystem));
-		m_testController.start().toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, 3000));
+		m_testController.start().whileTrue(new SetSpeedIntake(m_intakeSubsystem, 3000));
 		m_testController.rightTrigger().whileTrue(new SetSpeedIntake(m_intakeSubsystem, -3000));
 		new JoystickButton(m_driverController.getHID(), XboxController.Button.kRightBumper.value).whileTrue(
 				new HomeIntake(m_intakeSubsystem));
@@ -309,6 +328,7 @@ public class RobotContainer {
 				// () -> {
 				// return SmartDashboard.getNumber("Top Motor Speed Target", 0);
 				// },
+
 				// () -> {
 				// return SmartDashboard.getNumber("Middle Motor Speed Target", 0);
 				// },
@@ -335,35 +355,39 @@ public class RobotContainer {
 		m_driverController.y().onTrue(new InstantCommand(
 				() -> m_robotDrive.zeroHeading(),
 				m_robotDrive));
-		m_driverController.b().whileTrue(new Shoot(
-				() -> {
-					return 5500;
-				},
-				() -> {
-					return 5000;
-				},
-				() -> {
+		m_driverController.b().whileTrue(new FeedPass(m_shooterSubsystem));
+		// .whileTrue(new Shoot(
+		// () -> {
+		// return 4000; // 4000
+		// },
+		// () -> {
+		// return 6500; // 6500
+		// },
+		// () -> {
 
-					return 1500;
-				},
-				m_shooterSubsystem));
+		// return 1500;
+		// },
+		// m_shooterSubsystem));
 	}
 
 	private void configureOperatorControllerButtonBindings() {
 		// shooter
 		// m_operatorController.leftTrigger().whileTrue(new
 		// SpinUpToInputTargets(m_shooterSubsystem));
-		m_operatorController.rightTrigger().whileTrue(new Shoot(
-				() -> {
-					return 5500;
-				},
-				() -> {
-					return 5000;
-				},
-				() -> {
-					return -250;
-				},
-				m_shooterSubsystem));
+		m_operatorController.rightTrigger()
+				.whileTrue(new SpinUpPass(m_shooterSubsystem))
+				.whileFalse(new SpinDown(m_shooterSubsystem));
+		// .whileTrue(new Shoot(
+		// () -> {
+		// return 4000; // 4000
+		// },
+		// () -> {
+		// return 5500; // 6500
+		// },
+		// () -> {
+		// return -250;
+		// },
+		// m_shooterSubsystem));
 		// m_operatorController.leftTrigger().whileTrue(new Shoot(
 		// () -> {
 		// // return SmartDashboard.getNumber("Top Motor Speed Target", 0);
@@ -386,16 +410,26 @@ public class RobotContainer {
 		m_operatorController.a().whileTrue(new ReverseKickupMotor(m_shooterSubsystem));
 		// m_operatorController.b().whileTrue(new SpinUpToPassSpeeds());
 		// intake
-		m_operatorController.leftBumper().whileTrue(new ExtendIntake(m_intakeSubsystem));
-		// m_operatorController.rightBumper().whileTrue(new RetractIntake());
-		m_operatorController.rightBumper().whileTrue(new HomeIntake(m_intakeSubsystem));
+		// m_operatorController.leftBumper().whileTrue(new
+		// ExtendIntake(m_intakeSubsystem));
+		// // m_operatorController.rightBumper().whileTrue(new RetractIntake());
+		// m_operatorController.rightBumper().whileTrue(new
+		// HomeIntake(m_intakeSubsystem));
 		m_operatorController.povLeft()
-				.toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed));
+				.toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed))
+				.whileFalse(new InstantCommand(() -> {
+					m_intakeSubsystem.m_intakeMotor.set(0);
+				}, m_intakeSubsystem));
 		m_operatorController.povRight()
-				.toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, -IntakeConstants.kIntakeFullSpeed));
+				.toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, -IntakeConstants.kIntakeFullSpeed))
+				.whileFalse(new InstantCommand(() -> {
+					m_intakeSubsystem.m_intakeMotor.set(0);
+				}, m_intakeSubsystem));
 
 		// sequences
-		m_operatorController.povDown().onTrue(new SetSpeedIntake(m_intakeSubsystem, 0));
+		m_operatorController.povDown().onTrue(new InstantCommand(() -> {
+			m_intakeSubsystem.m_intakeMotor.set(0);
+		}, m_intakeSubsystem));
 		// m_operatorController.povDown().whileTrue(
 		// new SequentialCommandGroup(new ExtendIntakePID(m_intakeSubsystem),
 		// new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed)));
@@ -404,10 +438,18 @@ public class RobotContainer {
 		// new SetSpeedIntake(m_intakeSubsystem, 0)));
 		m_operatorController.b().whileTrue(new FeedShooter(m_shooterSubsystem));
 		m_operatorController.leftStick().onTrue(new HomeClimber(m_climberSubsystem));
-		m_operatorController.rightStick().onTrue(new InstantCommand(() -> {
-			m_climberSubsystem.m_leftClimber.resetEncoder();
-			m_climberSubsystem.m_rightClimber.resetEncoder();
-		}, m_climberSubsystem));
+		// m_operatorController.rightStick().onTrue(new InstantCommand(() -> {
+		// m_climberSubsystem.m_leftClimber.resetEncoder();
+		// m_climberSubsystem.m_rightClimber.resetEncoder();
+		// }, m_climberSubsystem));
+
+		m_operatorController.leftBumper().onTrue(new ExtendIntakePID(m_intakeSubsystem));
+		m_operatorController.rightBumper().onTrue(new RetractIntakePID(m_intakeSubsystem));
+		// m_operatorController.leftBumper().onTrue(new
+		// IntakeDownSpinUpIntake(m_intakeSubsystem));
+		// m_operatorController.rightBumper().onTrue(new
+		// IntakeUpSpinDownIntake(m_intakeSubsystem));
+		m_operatorController.x().toggleOnTrue(new AgitateBalls(m_intakeSubsystem));
 
 		m_operatorController.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.9)
 				.onTrue(
@@ -474,6 +516,8 @@ public class RobotContainer {
 		m_testController.back().onTrue(new InstantCommand(() -> {
 			m_shooterSubsystem.setSpeedBottom(m_shooterSubsystem.getBottomMotorSpeedTarget() - 100);
 		}, m_shooterSubsystem));
+		m_testController.rightBumper()
+				.onTrue(new PathPlannerAuto("Center Start - Straight Back - Right Outside Climb"));
 	}
 
 	private double getDriverControllerProcessedLeftStickX() {

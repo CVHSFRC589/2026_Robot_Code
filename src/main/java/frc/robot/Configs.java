@@ -80,7 +80,7 @@ public final class Configs {
 
 			pivotMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-					.pid(0.02, 0, 0, ClosedLoopSlot.kSlot0)
+					.pid(0.005, 0, 0.01, ClosedLoopSlot.kSlot0)
 					.outputRange(-1, 1).maxMotion
 					.cruiseVelocity(Constants.IntakeConstants.kCruiseVel0, ClosedLoopSlot.kSlot0)
 					.maxAcceleration(Constants.IntakeConstants.kMaxAccel0, ClosedLoopSlot.kSlot0)
@@ -119,9 +119,9 @@ public final class Configs {
 			intakeMotorConfig.closedLoop
 					.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
 					// These are example gains you may need to them for your own robot!
-					.p(0.0125)
+					.p(0.00125)
 					.outputRange(-1, 1)
-					.d(0.05).feedForward.kS(8).kV(0.05);
+					.d(0.06).feedForward.kS(8).kV(0.05);
 			intakeMotorConfig.encoder
 					.uvwMeasurementPeriod(8)
 					.quadratureAverageDepth(2)
@@ -233,7 +233,7 @@ public final class Configs {
 			bottomMotorConfig.inverted(true);
 			bottomMotorConfig.closedLoop.feedForward.kV(ShooterConstants.kBottomMotorFF)
 					.kS(ShooterConstants.kBottomMotorSFF);
-			bottomMotorConfig.smartCurrentLimit(50); // try 60, 70, and 80; watch motor temperature and see how the
+			bottomMotorConfig.smartCurrentLimit(80); // try 60, 70, and 80; watch motor temperature and see how the
 														// higher currents affect. Right now with 50 temperature of
 														// motor is going down.
 			bottomMotorConfig.encoder

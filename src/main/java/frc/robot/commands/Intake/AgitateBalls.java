@@ -5,6 +5,7 @@
 package frc.robot.commands.Intake;
 
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,28 +16,29 @@ public class AgitateBalls extends Command {
   /** Creates a new AgitateBalls. */
   public IntakeSubsystem m_intakeSubsystem;
   private boolean m_direction;
+
   public AgitateBalls(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intakeSubsystem = intakeSubsystem;
     addRequirements(m_intakeSubsystem);
   }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_direction = false;
-    m_intakeSubsystem.setAngle(80.0,ClosedLoopSlot.kSlot1);
+    m_intakeSubsystem.m_pivotController.setSetpoint(80.0, ControlType.kPosition, ClosedLoopSlot.kSlot1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(MathUtil.isNear(m_intakeSubsystem.m_pivotController.getSetpoint(), m_intakeSubsystem.getPivotPosition(), 2)){
-      if(m_direction){
-        m_intakeSubsystem.setAngle(80, ClosedLoopSlot.kSlot1);
+    if (MathUtil.isNear(m_intakeSubsystem.m_pivotController.getSetpoint(), m_intakeSubsystem.getPivotPosition(), 2)) {
+      if (m_direction) {
+        m_intakeSubsystem.m_pivotController.setSetpoint(80, ControlType.kPosition, ClosedLoopSlot.kSlot1);
         m_direction = false;
-      }
-      else{
-        m_intakeSubsystem.setAngle(40, ClosedLoopSlot.kSlot1);
+      } else {
+        m_intakeSubsystem.m_pivotController.setSetpoint(40, ControlType.kPosition, ClosedLoopSlot.kSlot1);
         m_direction = true;
       }
     }
@@ -44,7 +46,8 @@ public class AgitateBalls extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
