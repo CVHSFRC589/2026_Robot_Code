@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
@@ -94,6 +95,27 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putData(m_field);
+
+    // Logging callback for current robot pose
+    PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+      // Do whatever you want with the pose here
+      m_field.setRobotPose(pose);
+      Logger.recordOutput("PathPlanner/CurrentPose", pose);
+    });
+
+    // Logging callback for target robot pose
+    PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+      // Do whatever you want with the pose here
+      m_field.getObject("target pose").setPose(pose);
+      Logger.recordOutput("PathPlanner/TargetPose", pose);
+    });
+
+    // Logging callback for the active path, this is sent as a list of poses
+    PathPlannerLogging.setLogActivePathCallback((poses) -> {
+      // Do whatever you want with the poses here
+      m_field.getObject("path").setPoses(poses);
+      Logger.recordOutput("PathPlanner/ActivePath", poses.toArray(new Pose2d[poses.size()]));
+    });
 
     // Configure AutoBuilder last
     AutoBuilder.configure(

@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -94,13 +96,19 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         // One or more tags visible, run the full heuristic.
         avgDist /= numTags;
         // Decrease std devs if multiple targets are visible
-        if (numTags > 1)
-          estStdDevsFront = Constants.CameraConstants.kMultiTagStdDevs;
-        // Increase std devs based on (average) distance
-        if (numTags == 1 && avgDist > 4)
-          estStdDevsFront = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-        else
-          estStdDevsFront = estStdDevsFront.times(1 + (avgDist * avgDist / 30));
+        if (numTags > 1) {
+          if (avgDist > 5) {
+            estStdDevsFront = CameraConstants.kMultiTagStdDevs.times(1 + (avgDist * avgDist / 25));
+          } else {
+            estStdDevsFront = CameraConstants.kMultiTagStdDevs;
+          }
+        } else {
+          if (avgDist > 5) {
+            estStdDevsFront = CameraConstants.kSingleTagStdDevs.times(1 + (avgDist * avgDist / 25));
+          } else {
+            estStdDevsFront = CameraConstants.kSingleTagStdDevs;
+          }
+        }
         curStdDevsFront = estStdDevsFront;
       }
     }
@@ -146,16 +154,20 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         curStdDevsBack = Constants.CameraConstants.kSingleTagStdDevs;
       } else {
         // One or more tags visible, run the full heuristic.
-        avgDist /= numTags;
-        // Decrease std devs if multiple targets are visible
-        if (numTags > 1)
-          estStdDevsBack = Constants.CameraConstants.kMultiTagStdDevs;
-        // Increase std devs based on (average) distance
-        if (numTags == 1 && avgDist > 4)
-          estStdDevsBack = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-        else
-          estStdDevsBack = estStdDevsBack.times(1 + (avgDist * avgDist / 30));
-        curStdDevsBack = estStdDevsBack;
+        if (numTags > 1) {
+          if (avgDist > 5) {
+            estStdDevsBack = CameraConstants.kMultiTagStdDevs.times(1 + (avgDist * avgDist / 25));
+          } else {
+            estStdDevsBack = CameraConstants.kMultiTagStdDevs;
+          }
+        } else {
+          if (avgDist > 5) {
+            estStdDevsBack = CameraConstants.kSingleTagStdDevs.times(1 + (avgDist * avgDist / 25));
+          } else {
+            estStdDevsBack = CameraConstants.kSingleTagStdDevs;
+          }
+        }
+        curStdDevsFront = estStdDevsBack;
       }
     }
   }
@@ -219,6 +231,11 @@ public class PhotonVisionSubsystem extends SubsystemBase {
             m_estimateConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           });
     }
+
+    var results = new ArrayList<>();
+    results.addAll(front_results);
+    results.addAll(back_results);
+    Logger.recordOutput("Vision/VisibleTargetsPoses", results.toArray(new Pose2d[results.size()]));
   }
 
   @FunctionalInterface
