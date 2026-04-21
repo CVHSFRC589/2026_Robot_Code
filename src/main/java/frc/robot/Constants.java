@@ -235,19 +235,19 @@ public final class Constants {
 		public static final Transform3d kRobotToFrontCam = new Transform3d( // seems to be incorrect in sign or
 																			// something similar
 				new Translation3d(
-						Units.inchesToMeters(11.090 * 3),
-						Units.inchesToMeters(11.125),
-						Units.inchesToMeters(19.7204)),
-				new Rotation3d(0, Units.degreesToRadians(20), 0));
+						Units.inchesToMeters(11.090), // at socal: 11.090 * 3
+						Units.inchesToMeters(11.125), // at socal: 11.125
+						Units.inchesToMeters(19.7204)), // at socal 19.7204
+				new Rotation3d(0, Units.degreesToRadians(160), 0)); // at socal: roll: 0, pitch: 20, yaw: 0
 		public static final Transform3d kRobotToBackCam = new Transform3d( // seems to be more correct than the forward
 																			// camera
 				new Translation3d(
-						Units.inchesToMeters(-11.0697 * 2.2),
-						Units.inchesToMeters(-8.75),
-						Units.inchesToMeters(17.467)),
-				new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(180)));
+						Units.inchesToMeters(-11.0697), // at socal: -11.0697 * 2.2
+						Units.inchesToMeters(-8.75), // at socal: -8.75
+						Units.inchesToMeters(17.467)), // at socal: 17.467
+				new Rotation3d(0, Units.degreesToRadians(20), 0)); // at socal: roll: 0, pitch: 20, yaw: 180
 		public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1); // old: 4, 4, 8
-		public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+		public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.125, 0.125, 1);
 	}
 
 	public static final class FieldConstants {
