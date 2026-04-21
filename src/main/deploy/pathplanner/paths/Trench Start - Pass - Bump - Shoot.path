@@ -1,0 +1,179 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.45,
+        "y": 7.5996005706134095
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.45,
+        "y": 7.5996005706134095
+      },
+      "isLocked": false,
+      "linkedName": "Under Left Trench Start"
+    },
+    {
+      "anchor": {
+        "x": 7.843819277108434,
+        "y": 6.537445783132529
+      },
+      "prevControl": {
+        "x": 7.843819277108434,
+        "y": 7.269683955178318
+      },
+      "nextControl": {
+        "x": 7.843819277108434,
+        "y": 6.287445783132529
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.843819277108434,
+        "y": 4.996638554216868
+      },
+      "prevControl": {
+        "x": 7.833623684729856,
+        "y": 5.246430567492016
+      },
+      "nextControl": {
+        "x": 7.884601646622744,
+        "y": 3.9974705011162905
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.876831325301204,
+        "y": 5.12777108433735
+      },
+      "prevControl": {
+        "x": 6.876831325301204,
+        "y": 5.12777108433735
+      },
+      "nextControl": {
+        "x": 5.626831325301204,
+        "y": 5.12777108433735
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Bump Cross"
+    },
+    {
+      "anchor": {
+        "x": 3.5275,
+        "y": 5.128
+      },
+      "prevControl": {
+        "x": 3.7775,
+        "y": 5.128
+      },
+      "nextControl": {
+        "x": 3.2775,
+        "y": 5.128
+      },
+      "isLocked": false,
+      "linkedName": "Alliance Bump Cross"
+    },
+    {
+      "anchor": {
+        "x": 2.680499286733238,
+        "y": 4.895420827389444
+      },
+      "prevControl": {
+        "x": 2.8607831325301203,
+        "y": 5.215192771084337
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.26970954356846716,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.7510373443983366,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.261410788381681,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.0995850622406373,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 4.012448132780066,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Intake Zone",
+      "minWaypointRelativePos": 0.9181141439206386,
+      "maxWaypointRelativePos": 2.21836228287842,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Bump Zone",
+      "minWaypointRelativePos": 3.1712158808932838,
+      "maxWaypointRelativePos": 3.9851116625309806,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Lower Intake",
+      "waypointRelativePos": 0.4516129032258118,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Spin Up Intake",
+      "waypointRelativePos": 0.521091811414385,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": true
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -20.0
+  },
+  "reversed": false,
+  "folder": "Start - Single Pass - Shoot Position",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

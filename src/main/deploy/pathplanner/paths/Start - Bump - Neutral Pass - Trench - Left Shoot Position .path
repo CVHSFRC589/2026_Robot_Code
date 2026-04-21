@@ -8,40 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6313012048192768,
-        "y": 7.214963855421687
+        "x": 5.5,
+        "y": 5.5
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Left Start"
     },
     {
       "anchor": {
-        "x": 3.9644819277108434,
-        "y": 7.411662650602409
+        "x": 5.756626506024096,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 3.7144819277108434,
-        "y": 7.411662650602409
+        "x": 5.506626506024096,
+        "y": 5.5
       },
       "nextControl": {
-        "x": 4.214481927710843,
-        "y": 7.411662650602409
+        "x": 6.006626506024096,
+        "y": 5.5
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.095385542168674,
-        "y": 7.411662650602409
+        "x": 6.193734939759036,
+        "y": 6.559301204819277
       },
       "prevControl": {
-        "x": 4.832679215337982,
-        "y": 7.411662650602409
+        "x": 6.696409638554217,
+        "y": 5.400963855421687
       },
       "nextControl": {
-        "x": 7.0024513693633,
-        "y": 7.411662650602409
+        "x": 5.832638276359173,
+        "y": 7.391393516132004
       },
       "isLocked": false,
       "linkedName": null
@@ -146,10 +146,6 @@
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 2.0912863070539007,
-      "rotationDegrees": 0.0
-    },
-    {
       "waypointRelativePos": 3.2,
       "rotationDegrees": 119.99999999999999
     },
@@ -169,11 +165,11 @@
   "constraintZones": [
     {
       "name": "Intake Zone",
-      "minWaypointRelativePos": 2.85062034739453,
-      "maxWaypointRelativePos": 4.80397022332509,
+      "minWaypointRelativePos": 2.8982630272952807,
+      "maxWaypointRelativePos": 5.216873449131447,
       "constraints": {
         "maxVelocity": 1.5,
-        "maxAcceleration": 1.5,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -185,7 +181,7 @@
   "eventMarkers": [
     {
       "name": "Lower Intake - Spin Up Intake | CS",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     },

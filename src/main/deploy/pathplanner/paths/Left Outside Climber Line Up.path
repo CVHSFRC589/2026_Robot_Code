@@ -3,26 +3,10 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.3,
-        "y": 4.0
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.9,
-        "y": 4.0
-      },
-      "isLocked": false,
-      "linkedName": "Middle Start"
-    },
-    {
-      "anchor": {
         "x": 2.0,
         "y": 4.16
       },
-      "prevControl": {
-        "x": 2.25,
-        "y": 4.16
-      },
+      "prevControl": null,
       "nextControl": {
         "x": 1.75,
         "y": 4.16
@@ -36,26 +20,21 @@
         "y": 4.175
       },
       "prevControl": {
-        "x": 2.1881218315630937,
+        "x": 1.58,
         "y": 4.175
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Left Outside Climb"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.385892116182573,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -66,10 +45,10 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Shoot - Outside Climb",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
