@@ -125,7 +125,7 @@ public class RobotContainer {
 		configureOperatorControllerButtonBindings();
 		configureTestControllerButtonBindings();
 
-		autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser = AutoBuilder.buildAutoChooser("None");
 		// autoChooser.addOption("Spin Up Shooter", new
 		// SpinToDistanceTargetSpeed(m_shooterSubsystem));
 		// autoChooser.addOption("Extend Intake", new ExtendIntake(m_intakeSubsystem));
@@ -163,22 +163,28 @@ public class RobotContainer {
 		new EventTrigger("Raise Climber").onTrue(new ExtendClimber(m_climberSubsystem));
 		new EventTrigger("Lower Climber").onTrue(new RetractClimber(m_climberSubsystem));
 
-		autoChooser.addOption("Left Start - Shoot Preload - Go to Left Outside Climb - NO CLIMB",
-				new PathPlannerAuto("Left Start - Shoot Preload - Go to Left Outside Climb - NO CLIMB"));
-		autoChooser.addOption("Left Trench Start - Wait - Shoot Preload - Left Outside Climb",
-				new PathPlannerAuto("Left Trench Start - Wait - Shoot Preload - Left Outside Climb"));
-		autoChooser.addOption("Middle Start - Left Outside Climb",
-				new PathPlannerAuto("Middle Start - Left Outside Climb"));
-		autoChooser.addOption("Left Start - Preload Shoot - Out of Way",
-				new PathPlannerAuto("Left Shoot - Preload Shoot - Out of Way"));
-		autoChooser.addOption("Left Start - Trench - Neutral Pass - Trench - Shoot - Left Outside Climb",
-				new PathPlannerAuto("Left Start - Trench - Neutral Pass - Trench - Shoot - Left Outside Climb"));
-		autoChooser.addOption("Right Bump - Right Outside Climb",
-				new PathPlannerAuto("Right Bump - Right Outside Climb"));
-		autoChooser.addOption("Center Start - Straight Back - Left Outside Climb",
-				new PathPlannerAuto("Center Start - Straight Back - Left Outside Climb"));
-		autoChooser.addOption("Center Start - Straight Back - Right Outside Climb",
-				new PathPlannerAuto("Center Start - Straight Back - Right Outside Climb"));
+		// autoChooser.addOption("Left Start - Shoot Preload - Go to Left Outside Climb
+		// - NO CLIMB",
+		// new PathPlannerAuto("Left Start - Shoot Preload - Go to Left Outside Climb -
+		// NO CLIMB"));
+		// autoChooser.addOption("Left Trench Start - Wait - Shoot Preload - Left
+		// Outside Climb",
+		// new PathPlannerAuto("Left Trench Start - Wait - Shoot Preload - Left Outside
+		// Climb"));
+		// autoChooser.addOption("Middle Start - Left Outside Climb",
+		// new PathPlannerAuto("Middle Start - Left Outside Climb"));
+		// autoChooser.addOption("Left Start - Preload Shoot - Out of Way",
+		// new PathPlannerAuto("Left Shoot - Preload Shoot - Out of Way"));
+		// autoChooser.addOption("Left Start - Trench - Neutral Pass - Trench - Shoot -
+		// Left Outside Climb",
+		// new PathPlannerAuto("Left Start - Trench - Neutral Pass - Trench - Shoot -
+		// Left Outside Climb"));
+		// autoChooser.addOption("Right Bump - Right Outside Climb",
+		// new PathPlannerAuto("Right Bump - Right Outside Climb"));
+		// autoChooser.addOption("Center Start - Straight Back - Left Outside Climb",
+		// new PathPlannerAuto("Center Start - Straight Back - Left Outside Climb"));
+		// autoChooser.addOption("Center Start - Straight Back - Right Outside Climb",
+		// new PathPlannerAuto("Center Start - Straight Back - Right Outside Climb"));
 
 		// autoChooser.addOption("Right Start - Preload Shoot - Right Outside
 		// Climb");
@@ -593,6 +599,6 @@ public class RobotContainer {
 	// false));
 	// }
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
+		return new SequentialCommandGroup(autoChooser.getSelected());
 	}
 }

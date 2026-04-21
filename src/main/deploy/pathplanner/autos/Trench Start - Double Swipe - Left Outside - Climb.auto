@@ -111,6 +111,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Left Shoot Position to Left Outside Climb"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Lower Climber"
@@ -120,6 +126,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Start - Sweep - Shoot - Left Outside Climb",
   "choreoAuto": false
 }

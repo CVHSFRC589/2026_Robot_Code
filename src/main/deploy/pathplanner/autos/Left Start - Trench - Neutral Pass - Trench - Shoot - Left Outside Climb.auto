@@ -51,6 +51,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Start - Sweep - Shoot - Left Outside Climb",
   "choreoAuto": false
 }
