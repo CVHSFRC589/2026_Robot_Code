@@ -1,0 +1,186 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.680499286733238,
+        "y": 4.895420827389444
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8170722891566267,
+        "y": 7.488156626506025
+      },
+      "isLocked": false,
+      "linkedName": "Left Shoot"
+    },
+    {
+      "anchor": {
+        "x": 4.620144578313253,
+        "y": 7.411662650602409
+      },
+      "prevControl": {
+        "x": 3.620144578313253,
+        "y": 7.411662650602409
+      },
+      "nextControl": {
+        "x": 7.120144578313253,
+        "y": 7.411662650602409
+      },
+      "isLocked": false,
+      "linkedName": "Under Left Trench"
+    },
+    {
+      "anchor": {
+        "x": 7.854746987951808,
+        "y": 6.613939759036145
+      },
+      "prevControl": {
+        "x": 7.854746987951808,
+        "y": 7.363939759036145
+      },
+      "nextControl": {
+        "x": 7.854746987951808,
+        "y": 6.123500751962126
+      },
+      "isLocked": false,
+      "linkedName": "Ball Pass Outside"
+    },
+    {
+      "anchor": {
+        "x": 7.854746987951808,
+        "y": 5.237048192771084
+      },
+      "prevControl": {
+        "x": 7.854746987951808,
+        "y": 6.311304927385321
+      },
+      "nextControl": {
+        "x": 7.854746987951808,
+        "y": 3.987048192771084
+      },
+      "isLocked": false,
+      "linkedName": "Ball Pass Inside"
+    },
+    {
+      "anchor": {
+        "x": 5.876831325301204,
+        "y": 5.12777108433735
+      },
+      "prevControl": {
+        "x": 7.376831325301204,
+        "y": 5.12777108433735
+      },
+      "nextControl": {
+        "x": 4.876831325301213,
+        "y": 5.12777108433735
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Bump Cross"
+    },
+    {
+      "anchor": {
+        "x": 3.5275,
+        "y": 5.128
+      },
+      "prevControl": {
+        "x": 4.152863960620605,
+        "y": 5.128
+      },
+      "nextControl": {
+        "x": 2.9021360393793936,
+        "y": 5.128
+      },
+      "isLocked": false,
+      "linkedName": "Alliance Bump Cross"
+    },
+    {
+      "anchor": {
+        "x": 2.680499286733238,
+        "y": 4.895420827389444
+      },
+      "prevControl": {
+        "x": 3.07933734939759,
+        "y": 5.149626506024097
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.2406639004149418,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.9211618257261294,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.582089552238781,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 4.05,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 4.974273858921136,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.149875930521096,
+      "maxWaypointRelativePos": 3.5,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 4.0513166779203145,
+      "maxWaypointRelativePos": 4.942606347062792,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": true
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -20.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -20.0
+  },
+  "useDefaultConstraints": true
+}

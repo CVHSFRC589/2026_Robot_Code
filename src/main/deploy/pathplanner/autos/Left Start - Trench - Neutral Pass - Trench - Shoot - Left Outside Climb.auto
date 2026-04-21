@@ -5,47 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Spin Up Shooter"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Center Start - Straight Back - Left Outside Climb"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 3.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Lower Intake"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Spin Intake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "Left Start - Trench - Neutral Pass - Trench - Left Shoot Position "
           }
         },
         {
@@ -55,41 +17,34 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Feed Shooter"
+                  "name": "Shoot"
                 }
               },
               {
-                "type": "sequential",
+                "type": "wait",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 3.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Raise Intake"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Spin Down Intake"
-                      }
-                    }
-                  ]
+                  "waitTime": 5.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Raise Climber"
                 }
               }
             ]
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Left Shoot Position to Left Outside Climb"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Spin Down Shooter"
+            "name": "Lower Climber"
           }
         }
       ]

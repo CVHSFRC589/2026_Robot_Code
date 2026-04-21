@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -217,9 +218,27 @@ public final class Constants {
 		public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
 		public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-		public static final double kPTransController = 0.25; // 4 is ok but not good
-		// public static final double kPYController = 1;
-		public static final double kPThetaController = 0.625;
+		public static final double kTranslationalControllerP = 0.25; // 4 is ok but not good
+		public static final double kTranslationalControllerI = 0.0;
+		public static final double kTranslationalControllerD = 0.0;
+		public static final double kTranslationalControllerIzone = 0.0;
+
+		public static final double kRotationalControllerP = 0.625;
+		public static final double kRotationalControllerI = 0.0;
+		public static final double kRotationalControllerD = 0.0;
+		public static final double kRotationalControllerIzone = 0.0;
+
+		public static final PIDConstants kTranslationPIDConstants = new PIDConstants(
+				kTranslationalControllerP,
+				kTranslationalControllerI,
+				kTranslationalControllerD,
+				kTranslationalControllerIzone);
+
+		public static final PIDConstants kRotationalPIDConstants = new PIDConstants(
+				kRotationalControllerP,
+				kRotationalControllerI,
+				kRotationalControllerD,
+				kRotationalControllerIzone);
 
 		// Constraint for the motion profiled robot angle controller
 		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

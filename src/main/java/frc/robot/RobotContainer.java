@@ -11,6 +11,7 @@ import javax.xml.xpath.XPathVariableResolver;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -56,6 +57,9 @@ import frc.robot.commands.Intake.RetractIntakePID;
 import frc.robot.commands.Intake.RunIntakeOG;
 import frc.robot.commands.Intake.SetPivotDegree;
 import frc.robot.commands.Intake.SetSpeedIntake;
+import frc.robot.commands.Intake.SpinDownIntake;
+import frc.robot.commands.Intake.SpinUpDownIntake;
+import frc.robot.commands.Intake.SpinUpIntake;
 import frc.robot.commands.SequentialCommands.IntakeUpSpinDownIntake;
 import frc.robot.commands.Shooter.FeedFuelAtTarget;
 import frc.robot.commands.Shooter.FeedPass;
@@ -142,11 +146,22 @@ public class RobotContainer {
 		// intake commands
 		NamedCommands.registerCommand("Lower Intake", new ExtendIntakePID(m_intakeSubsystem));
 		NamedCommands.registerCommand("Raise Intake", new RetractIntakePID(m_intakeSubsystem));
-		NamedCommands.registerCommand("Spin Intake",
+		NamedCommands.registerCommand("Spin Up Intake",
 				new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed));
 		NamedCommands.registerCommand("Spin Down Intake", new InstantCommand(() -> {
 			m_intakeSubsystem.m_intakeMotor.set(0);
 		}, m_intakeSubsystem));
+
+		// intake
+		new EventTrigger("Lower Intake").onTrue(new ExtendIntakePID(m_intakeSubsystem));
+		new EventTrigger("Raise Intake").onTrue(new RetractIntakePID(m_intakeSubsystem));
+		new EventTrigger("Spin Up Intake").onTrue(new SpinUpIntake(m_intakeSubsystem));
+		new EventTrigger("Spin Down Intake").onTrue(new SpinDownIntake(m_intakeSubsystem));
+		new EventTrigger("Spin Up Down Intake").whileTrue(new SpinUpDownIntake(m_intakeSubsystem));
+
+		// climber
+		new EventTrigger("Raise Climber").onTrue(new ExtendClimber(m_climberSubsystem));
+		new EventTrigger("Lower Climber").onTrue(new RetractClimber(m_climberSubsystem));
 
 		autoChooser.addOption("Left Start - Shoot Preload - Go to Left Outside Climb - NO CLIMB",
 				new PathPlannerAuto("Left Start - Shoot Preload - Go to Left Outside Climb - NO CLIMB"));
@@ -416,20 +431,13 @@ public class RobotContainer {
 		// m_operatorController.rightBumper().whileTrue(new
 		// HomeIntake(m_intakeSubsystem));
 		m_operatorController.povLeft()
-				.toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed))
-				.whileFalse(new InstantCommand(() -> {
-					m_intakeSubsystem.m_intakeMotor.set(0);
-				}, m_intakeSubsystem));
+				.onTrue(new SpinUpIntake(m_intakeSubsystem))
+				.onFalse(new SpinDownIntake(m_intakeSubsystem));
 		m_operatorController.povRight()
-				.toggleOnTrue(new SetSpeedIntake(m_intakeSubsystem, -IntakeConstants.kIntakeFullSpeed))
-				.whileFalse(new InstantCommand(() -> {
-					m_intakeSubsystem.m_intakeMotor.set(0);
-				}, m_intakeSubsystem));
+				.onTrue(new SpinUpIntake(m_intakeSubsystem))
+				.onFalse(new SpinDownIntake(m_intakeSubsystem));
 
 		// sequences
-		m_operatorController.povDown().onTrue(new InstantCommand(() -> {
-			m_intakeSubsystem.m_intakeMotor.set(0);
-		}, m_intakeSubsystem));
 		// m_operatorController.povDown().whileTrue(
 		// new SequentialCommandGroup(new ExtendIntakePID(m_intakeSubsystem),
 		// new SetSpeedIntake(m_intakeSubsystem, IntakeConstants.kIntakeFullSpeed)));

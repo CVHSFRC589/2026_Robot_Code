@@ -3,48 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 5.5
+        "x": 4.45,
+        "y": 7.5996005706134095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6313012048192768,
-        "y": 7.214963855421687
+        "x": 6.458587731811697,
+        "y": 7.405520684736091
       },
       "isLocked": false,
-      "linkedName": "Left Start"
-    },
-    {
-      "anchor": {
-        "x": 3.9644819277108434,
-        "y": 7.411662650602409
-      },
-      "prevControl": {
-        "x": 3.7144819277108434,
-        "y": 7.411662650602409
-      },
-      "nextControl": {
-        "x": 4.214481927710843,
-        "y": 7.411662650602409
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.095385542168674,
-        "y": 7.411662650602409
-      },
-      "prevControl": {
-        "x": 4.832679215337982,
-        "y": 7.411662650602409
-      },
-      "nextControl": {
-        "x": 7.0024513693633,
-        "y": 7.411662650602409
-      },
-      "isLocked": false,
-      "linkedName": null
+      "linkedName": "Under Left Trench Start"
     },
     {
       "anchor": {
@@ -142,37 +110,29 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 2.0912863070539007,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 3.2,
+      "waypointRelativePos": 1.2000000000000002,
       "rotationDegrees": 119.99999999999999
     },
     {
-      "waypointRelativePos": 4.873858921161798,
+      "waypointRelativePos": 2.8738589211617978,
       "rotationDegrees": 119.99999999999999
     },
     {
-      "waypointRelativePos": 5.623236514522822,
+      "waypointRelativePos": 3.623236514522822,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 7.123651452282133,
+      "waypointRelativePos": 5.123651452282133,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
-      "name": "Intake Zone",
-      "minWaypointRelativePos": 2.85062034739453,
-      "maxWaypointRelativePos": 4.80397022332509,
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.296421336934494,
+      "maxWaypointRelativePos": 2.528021607022291,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.0,
         "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -185,13 +145,13 @@
   "eventMarkers": [
     {
       "name": "Lower Intake - Spin Up Intake | CS",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 0.5,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Spin Up Shooter",
-      "waypointRelativePos": 6.0,
+      "waypointRelativePos": 4.0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -202,7 +162,7 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0,
