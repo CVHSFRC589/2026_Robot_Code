@@ -1,0 +1,44 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.commands.Intake;
+
+import org.wpilib.command2.Command;
+import frc.robot.subsystems.IntakeSubsystem;
+
+/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+public class ExtendIntake extends Command {
+  public IntakeSubsystem m_intakeSubsystem;
+
+  /** Creates a new Extend. */
+  public ExtendIntake(IntakeSubsystem intakeSubsystem) {
+    m_intakeSubsystem = intakeSubsystem;
+    addRequirements(m_intakeSubsystem);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    m_intakeSubsystem.set(.21);
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    // to create a conversion factor for the motor config that maps 1 to full
+                                      // extension and 0 to full retraction
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    m_intakeSubsystem.set(0);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
+}

@@ -1,0 +1,118 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems;
+
+import org.littletonrobotics.junction.Logger;
+
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkLowLevel.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
+import org.wpilib.math.util.MathUtil;
+// import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.command2.SubsystemBase;
+import org.wpilib.hardware.bus.CANPort;
+
+// import frc.robot.Configs.IntakeSubsystemConfigs;
+import frc.robot.Constants.IntakeConstants;
+
+public class IntakeSubsystem extends SubsystemBase {
+  /** Creates a new IntakeSubsystem. */
+  public SparkFlex m_pivotMotor; // change back to SparkFlex
+  public SparkFlex m_intakeMotor; // change back to SparkFlex
+
+  public SparkClosedLoopController m_pivotController;
+  public SparkClosedLoopController m_intakeController;
+
+  public SparkLimitSwitch m_pivotMotorUpperSwitch;
+  public SparkLimitSwitch m_pivotMotorLowerSwitch;
+
+  public IntakeSubsystem() {
+    m_pivotMotor = new SparkFlex(CANPort.CAN_S2, IntakeConstants.kPivotMotorCanID, MotorType.kBrushless);
+    m_pivotController = m_pivotMotor.getClosedLoopController();
+    m_intakeMotor = new SparkFlex(CANPort.CAN_S2, IntakeConstants.kIntakeMotorCanID, MotorType.kBrushless);
+    m_intakeController = m_intakeMotor.getClosedLoopController();
+
+    // m_pivotMotor.configure(IntakeSubsystemConfigs.pivotMotorConfig,
+    //     ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
+    // m_intakeMotor.configure(IntakeSubsystemConfigs.intakeMotorConfig,
+    //     ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
+
+    m_pivotMotorUpperSwitch = m_pivotMotor.getReverseLimitSwitch();
+    m_pivotMotorLowerSwitch = m_pivotMotor.getForwardLimitSwitch();
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    // SmartDashboard.putNumber("Intake Pivot Position",
+    // m_pivotMotor.getEncoder().getPosition());
+    // SmartDashboard.putNumber("Set Point Position",
+    // m_pivotController.getMAXMotionSetpointPosition());
+    // SmartDashboard.putBoolean("Is it at set point",
+    // m_pivotController.isAtSetpoint());
+    // SmartDashboard.putBoolean("Upper limit switch pressed?",
+    // m_pivotMotorUpperSwitch.isPressed());
+    // SmartDashboard.putBoolean("Lower limit switch pressed?",
+    // m_pivotMotorLowerSwitch.isPressed());
+    // SmartDashboard.putBoolean("Retracted Limit Switch Hit",
+    // retractedLimitSwitchHit());
+    // SmartDashboard.putBoolean("Extended Limit Switch Hit",
+    // extendedLimitSwitchHit());
+    // SmartDashboard.putNumber("Intake Wheel Speed",
+    // m_intakeMotor.getEncoder().getVelocity());
+
+    // Logger.recordOutput("Intake/PivotPosition", m_pivotMotor.getEncoder().getPosition());
+    // Logger.recordOutput("Intake/WheelSpeed", m_intakeMotor.getEncoder().getVelocity());
+    Logger.recordOutput("Intake/RetractedLimitSwitch", retractedLimitSwitchHit());
+    Logger.recordOutput("Intake/ExtendedLimitSwitch", extendedLimitSwitchHit());
+
+    if (retractedLimitSwitchHit()) {
+      m_pivotMotor.getEncoder().setPosition(0);
+    }
+  }
+
+  // public void home() {
+  // m_pivotController.setSetpoint(0.25, ControlType.kDutyCycle);
+  // }
+
+  public void set(double dutyCycle) {
+    m_pivotController.setSetpoint(
+        Math.clamp(dutyCycle, -IntakeConstants.kMaxPivotDutyCycle, IntakeConstants.kMaxPivotDutyCycle),
+        ControlType.kDutyCycle);
+  }
+
+  public double getPivotPosition() {
+    return m_pivotMotor.getEncoder().getPosition().get();
+  }
+
+  public void setAngle(double angleDegrees, ClosedLoopSlot slot) {
+    m_pivotController.setSetpoint(angleDegrees, ControlType.kMAXMotionPositionControl, slot, 3.0);
+  }
+
+  public boolean retractedLimitSwitchHit() {
+    return m_pivotMotorUpperSwitch.isPressed().get();
+  }
+
+  public boolean extendedLimitSwitchHit() {
+    return m_pivotMotorLowerSwitch.isPressed().get();
+  }
+
+  public void resetPivotEncoder() {
+    m_pivotMotor.getEncoder().setPosition(0);
+  }
+
+  public void setPosition(double pos) {
+    m_pivotController.setSetpoint(pos, ControlType.kMAXMotionPositionControl);
+  }
+}
